@@ -53,7 +53,7 @@
     
     ArtistEntity *entity = [coredata findOrCreateArtistWithName:name];
     
-    NSLog(@"entity.cleanName=%@", entity.cleanName);
+    NSLog(@"entity.cleanName=%@ dateUpdate=%@", entity.cleanName, entity.dateUpdate);
     
     XCTAssertNotNil(entity, @"%@ Not exist and not created ???", name);
     XCTAssertEqualObjects(entity.cleanName, cleanName, @"Bad value in cleanName field");
@@ -68,7 +68,7 @@
 
     ArtistEntity *entity = [coredata findOrCreateArtistWithName:name];
     
-    NSLog(@"entity.cleanName=%@", entity.cleanName);
+    NSLog(@"entity.cleanName=%@ dateUpdate=%@", entity.cleanName, entity.dateUpdate);
     
     XCTAssertNotNil(entity, @"%@ Not exist and not created ???", name);
     XCTAssertEqualObjects(entity.cleanName, cleanName, @"Bad value in cleanName field");

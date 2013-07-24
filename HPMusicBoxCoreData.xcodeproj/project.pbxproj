@@ -16,14 +16,14 @@
 		09377CDF179CFE3F00CCABF0 /* libHPMusicBoxCoreData.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CC7179CFE3F00CCABF0 /* libHPMusicBoxCoreData.a */; };
 		09377CE5179CFE3F00CCABF0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09377CE3179CFE3F00CCABF0 /* InfoPlist.strings */; };
 		09377CE7179CFE3F00CCABF0 /* HPMusicBoxCoreDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 09377CE6179CFE3F00CCABF0 /* HPMusicBoxCoreDataTests.m */; };
-		09377CF4179E469100CCABF0 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09377CF3179E469100CCABF0 /* ArtistEntity.m */; };
-		09377CF5179E469100CCABF0 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09377CF3179E469100CCABF0 /* ArtistEntity.m */; };
 		09377CFA179E4C1900CCABF0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CF9179E4C1900CCABF0 /* CoreData.framework */; };
 		09377CFB179E4C2700CCABF0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CF9179E4C1900CCABF0 /* CoreData.framework */; };
 		09377CFD179E4CBB00CCABF0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CFC179E4CBB00CCABF0 /* UIKit.framework */; };
 		09377CFE179E4CC400CCABF0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CFC179E4CBB00CCABF0 /* UIKit.framework */; };
 		09377CFF179E56BD00CCABF0 /* MusicBoxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09377CF0179CFEBD00CCABF0 /* MusicBoxModel.xcdatamodeld */; };
 		09377D00179E56BE00CCABF0 /* MusicBoxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09377CF0179CFEBD00CCABF0 /* MusicBoxModel.xcdatamodeld */; };
+		09377D03179F987600CCABF0 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09377D02179F987600CCABF0 /* ArtistEntity.m */; };
+		09377D04179F987600CCABF0 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09377D02179F987600CCABF0 /* ArtistEntity.m */; };
 		6A4BC8825838420584210BC8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 980C1F10487F453DA963B0F9 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -63,13 +63,13 @@
 		09377CE4179CFE3F00CCABF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09377CE6179CFE3F00CCABF0 /* HPMusicBoxCoreDataTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HPMusicBoxCoreDataTests.m; sourceTree = "<group>"; };
 		09377CF1179CFEBD00CCABF0 /* MusicBoxModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MusicBoxModel.xcdatamodel; sourceTree = "<group>"; };
-		09377CF2179E469100CCABF0 /* ArtistEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistEntity.h; sourceTree = "<group>"; };
-		09377CF3179E469100CCABF0 /* ArtistEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistEntity.m; sourceTree = "<group>"; };
 		09377CF6179E479200CCABF0 /* HPMusicBoxCoreData.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = HPMusicBoxCoreData.podspec; sourceTree = "<group>"; };
 		09377CF7179E4B1B00CCABF0 /* readme.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = readme.txt; sourceTree = "<group>"; };
 		09377CF8179E4BD200CCABF0 /* HPMusicBoxCoreData_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPMusicBoxCoreData_Private.h; sourceTree = "<group>"; };
 		09377CF9179E4C1900CCABF0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		09377CFC179E4CBB00CCABF0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		09377D01179F987600CCABF0 /* ArtistEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistEntity.h; sourceTree = "<group>"; };
+		09377D02179F987600CCABF0 /* ArtistEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistEntity.m; sourceTree = "<group>"; };
 		7E8F1434222146CFB61E5787 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		980C1F10487F453DA963B0F9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -140,9 +140,9 @@
 		09377CCC179CFE3F00CCABF0 /* HPMusicBoxCoreData */ = {
 			isa = PBXGroup;
 			children = (
+				09377D01179F987600CCABF0 /* ArtistEntity.h */,
+				09377D02179F987600CCABF0 /* ArtistEntity.m */,
 				09377CF0179CFEBD00CCABF0 /* MusicBoxModel.xcdatamodeld */,
-				09377CF2179E469100CCABF0 /* ArtistEntity.h */,
-				09377CF3179E469100CCABF0 /* ArtistEntity.m */,
 				09377CCF179CFE3F00CCABF0 /* HPMusicBoxCoreData.h */,
 				09377CD1179CFE3F00CCABF0 /* HPMusicBoxCoreData.m */,
 				09377CF8179E4BD200CCABF0 /* HPMusicBoxCoreData_Private.h */,
@@ -293,7 +293,7 @@
 			files = (
 				09377CD2179CFE3F00CCABF0 /* HPMusicBoxCoreData.m in Sources */,
 				09377CFF179E56BD00CCABF0 /* MusicBoxModel.xcdatamodeld in Sources */,
-				09377CF4179E469100CCABF0 /* ArtistEntity.m in Sources */,
+				09377D03179F987600CCABF0 /* ArtistEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,7 +303,7 @@
 			files = (
 				09377CE7179CFE3F00CCABF0 /* HPMusicBoxCoreDataTests.m in Sources */,
 				09377D00179E56BE00CCABF0 /* MusicBoxModel.xcdatamodeld in Sources */,
-				09377CF5179E469100CCABF0 /* ArtistEntity.m in Sources */,
+				09377D04179F987600CCABF0 /* ArtistEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

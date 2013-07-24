@@ -96,6 +96,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                                                          inManagedObjectContext:context];
     
     entity.cleanName = cleanName;
+    entity.dateUpdate = [NSDate date];
     
     return entity;
 }
