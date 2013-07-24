@@ -11,11 +11,11 @@
 #import "HPMusicBoxCoreData_Private.h"
 #import "HPMusicHelper.h"
 
-#define FATAL_CORE_DATA_ERROR(__error__) \
-NSLog(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
-if ([(id) [[UIApplication sharedApplication] delegate] respondsToSelector:@selector(fatalCoreDataError:)]) {\
-[(id) [[UIApplication sharedApplication] delegate] performSelector:@selector(fatalCoreDataError:) withObject:error];\
-};
+//#define FATAL_CORE_DATA_ERROR(__error__) \
+//NSLog(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
+//if ([(id) [[UIApplication sharedApplication] delegate] respondsToSelector:@selector(fatalCoreDataError:)]) {\
+//[(id) [[UIApplication sharedApplication] delegate] performSelector:@selector(fatalCoreDataError:) withObject:error];\
+//};
 
 static NSURL *documentsURL = nil;
 static HPMusicBoxCoreData *sharedMyManager = nil;
@@ -72,25 +72,25 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 #pragma mark - Facade CoreData
 
--(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName {
+-(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName error:(NSError **) error{
     
     ArtistEntity *entity = nil;
     
-    entity = [self findArtistWithName:fullName];
+    entity = [self findArtistWithName:fullName error:error];
     
     if (!entity) {
         
-        entity = [self createArtistWithName:fullName];
+        entity = [self createArtistWithName:fullName error:error];
     }
 
     return entity;
 }
 
--(ArtistEntity *) createArtistWithName:(NSString *) fullName {
+-(ArtistEntity *) createArtistWithName:(NSString *) fullName error:(NSError **) error {
     
     NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
 
-    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObjectContext *context = [self managedObjectContext:error];
     
     ArtistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:@"ArtistEntity"
                                                          inManagedObjectContext:context];
@@ -101,11 +101,11 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return entity;
 }
 
--(ArtistEntity *) findArtistWithName:(NSString *) fullName {
+-(ArtistEntity *) findArtistWithName:(NSString *) fullName error:(NSError **) error {
     
     NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
     
-    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObjectContext *context = [self managedObjectContext:error];
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -117,14 +117,11 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     [fetchRequest setPredicate:predicate];
     
-    NSError *error;
-    
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
-                                                     error:&error];
+                                                     error:error];
     
     if (error) {
         
-        FATAL_CORE_DATA_ERROR(error);
         return nil;
     }
     
@@ -137,21 +134,11 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return nil;
 }
 
--(BOOL) save {
+-(BOOL) save:(NSError **) error {
     
-    NSManagedObjectContext *context = [self managedObjectContext];
+    NSManagedObjectContext *context = [self managedObjectContext:error];
     
-    NSError *error = nil;
-    
-    BOOL result = [context save:&error];
-    
-    if (error) {
-        
-        FATAL_CORE_DATA_ERROR(error);
-        return NO;
-    }
-    
-    return result;
+    return [context save:error];
 }
 
 
@@ -159,15 +146,15 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 // Returns the managed object context for the application.
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext
+- (NSManagedObjectContext *)managedObjectContext:(NSError **) error
 {
-    [self checkSimulError];
+    [self checkSimulError:error];
     
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
     
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator:error];
     if (coordinator != nil) {
         _managedObjectContext = [[NSManagedObjectContext alloc] init];
         [_managedObjectContext setPersistentStoreCoordinator:coordinator];
@@ -177,7 +164,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel
+- (NSManagedObjectModel *)managedObjectModel:(NSError **) error
 {
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
@@ -195,7 +182,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator:(NSError **) error
 {
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
@@ -203,17 +190,15 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"MusicBox.sqlite"];
     
-    NSError *error = nil;
-    
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel:error]];
     
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
                                                    configuration:nil
                                                              URL:storeURL
                                                          options:nil
-                                                           error:&error]) {
+                                                           error:error]) {
         
-        FATAL_CORE_DATA_ERROR(error);
+        //FATAL_CORE_DATA_ERROR(error);
         
         return nil;
     }
@@ -221,7 +206,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return _persistentStoreCoordinator;
 }
 
--(BOOL) checkSimulError {
+-(BOOL) checkSimulError:(NSError **) error {
     
     if (self.simulError) {
         
@@ -230,9 +215,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:errorMsg forKey:NSLocalizedDescriptionKey];
         
-        NSError *error = [NSError errorWithDomain:@"coredata" code:500 userInfo:details];
+        *error = [NSError errorWithDomain:@"coredata" code:500 userInfo:details];
         
-        FATAL_CORE_DATA_ERROR(error);
+        //FATAL_CORE_DATA_ERROR(error);
     }
     
     return self.simulError;

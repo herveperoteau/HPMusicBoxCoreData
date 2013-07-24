@@ -27,13 +27,13 @@
 
 /** create if not already exist
  */
--(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName;
+-(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName error:(NSError **) error;
 
 
 /**
  * Save all modifications in DataBase
  * You need call this method when your application ended or switch in background mode
  */
--(BOOL) save;
+-(BOOL) save:(NSError **) error;
 
 @end
