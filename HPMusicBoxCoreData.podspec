@@ -9,4 +9,5 @@ Pod::Spec.new do |s|
   s.source = { :git => "https://github.com/herveperoteau/HPMusicBoxCoreData.git"}
   s.source_files = 'HPMusicBoxCoreData'
   s.requires_arc = true
+  s.resources = ["HPMusicBoxCoreData/*.xcdatamodeld"]
 end
