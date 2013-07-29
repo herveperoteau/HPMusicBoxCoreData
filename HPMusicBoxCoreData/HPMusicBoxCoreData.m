@@ -77,10 +77,16 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     ArtistEntity *entity = nil;
     
     entity = [self findArtistWithName:fullName error:error];
-    
+    if (*error != nil) {
+        return nil;
+    }
+
     if (!entity) {
         
         entity = [self createArtistWithName:fullName error:error];
+        if (*error != nil) {
+            return nil;
+        }
     }
 
     return entity;
@@ -91,7 +97,10 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
 
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    
+    if (*error != nil) {
+        return nil;
+    }
+
     ArtistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:@"ArtistEntity"
                                                          inManagedObjectContext:context];
     
@@ -106,6 +115,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
+    if (*error != nil) {
+        return nil;
+    }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -120,8 +132,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
                                                      error:error];
     
-    if (error) {
-        
+    if (*error != nil) {
         return nil;
     }
     
