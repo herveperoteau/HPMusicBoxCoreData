@@ -2,7 +2,7 @@
 //  ArtistEntity.m
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 24/07/13.
+//  Created by Hervé PEROTEAU on 05/08/13.
 //  Copyright (c) 2013 Hervé PEROTEAU. All rights reserved.
 //
 

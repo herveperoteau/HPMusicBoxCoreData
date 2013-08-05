@@ -24,10 +24,15 @@
  */
 +(HPMusicBoxCoreData *) sharedManager;
 
+#pragma mark - API Twitter Artist
 
 /** create if not already exist
  */
 -(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName error:(NSError **) error;
+
+
+#pragma mark - API PlayLists with criterias
+
 
 
 /**

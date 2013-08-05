@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 #import "HPMusicBoxCoreData.h"
 #import "HPMusicBoxCoreData_Private.h"
+#import "ArtistEntity+Helper.h"
 
 @interface HPMusicBoxCoreDataTests : XCTestCase
 
@@ -55,30 +56,30 @@
     
     ArtistEntity *entity = [coredata findOrCreateArtistWithName:name error:&error];
     
-    NSLog(@"entity.cleanName=%@ dateUpdate=%@ error=%@", entity.cleanName, entity.dateUpdate, [error localizedDescription]);
+    NSLog(@"entity=%@ error=%@", [entity toString], [error localizedDescription]);
     
     XCTAssertNotNil(entity, @"%@ Not exist and not created ???", name);
     XCTAssertEqualObjects(entity.cleanName, cleanName, @"Bad value in cleanName field");
     XCTAssertNil(error, @"error: %@", [error localizedDescription]);
 }
 
-- (void)testSimulError
-{
-    NSString *name = @" The Strokes ";
-    NSString *cleanName = @"strokes";
-    
-    coredata.simulError = YES;
-    
-    NSError *error = nil;
-
-    ArtistEntity *entity = [coredata findOrCreateArtistWithName:name error:&error];
-    
-    NSLog(@"entity.cleanName=%@ dateUpdate=%@ error=%@", entity.cleanName, entity.dateUpdate, [error localizedDescription]);
-    
-    XCTAssertNotNil(entity, @"%@ Not exist and not created ???", name);
-    XCTAssertEqualObjects(entity.cleanName, cleanName, @"Bad value in cleanName field");
-    XCTAssertNotNil(error, @"pas eu d'erreur dans testSimulError ???");
-}
+//- (void)testSimulError
+//{
+//    NSString *name = @" The Strokes ";
+//    NSString *cleanName = @"strokes";
+//    
+//    coredata.simulError = YES;
+//    
+//    NSError *error = nil;
+//
+//    ArtistEntity *entity = [coredata findOrCreateArtistWithName:name error:&error];
+//    
+//    NSLog(@"entity.cleanName=%@ dateUpdate=%@ error=%@", entity.cleanName, entity.dateUpdate, [error localizedDescription]);
+//    
+//    XCTAssertNotNil(entity, @"%@ Not exist and not created ???", name);
+//    XCTAssertEqualObjects(entity.cleanName, cleanName, @"Bad value in cleanName field");
+//    XCTAssertNotNil(error, @"pas eu d'erreur dans testSimulError ???");
+//}
 
 
 #pragma mark - Core Data stack
