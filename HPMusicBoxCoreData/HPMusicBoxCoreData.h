@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "ArtistEntity.h"
+#import "SmartPlaylistEntity.h"
+#import "CriteriaPLEntity.h"
+
+#define ERROR_ALREADY_EXIST 1001
 
 @interface HPMusicBoxCoreData : NSObject
-
 
 /**
  Directory where database is store
@@ -33,6 +36,15 @@
 
 #pragma mark - API PlayLists with criterias
 
+-(NSArray *) getSmartPlaylists;
+
+-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error;
+
+-(CriteriaPLEntity *) createCriteriaInPlaylist:(SmartPlaylistEntity *)playlist error:(NSError **) error;
+
+#pragma mark - Delete, Save
+
+-(void) deleteObject:(NSManagedObject *) object error:(NSError **) error;
 
 
 /**

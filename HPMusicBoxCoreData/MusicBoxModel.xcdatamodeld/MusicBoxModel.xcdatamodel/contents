@@ -16,6 +16,7 @@
         <attribute name="dateCreate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="dateLastCount" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="SmartPlaylistEntity" representedClassName="SmartPlaylistEntity" parentEntity="PLBaseEntity" syncable="YES">
         <attribute name="flagCriteriasAND" optional="YES" attributeType="Boolean" defaultValueString="0" syncable="YES"/>
@@ -23,8 +24,8 @@
     </entity>
     <elements>
         <element name="ArtistEntity" positionX="-3834" positionY="-7713" width="128" height="88"/>
-        <element name="SmartPlaylistEntity" positionX="-3827" positionY="-7447" width="128" height="73"/>
         <element name="CriteriaPLEntity" positionX="-3582" positionY="-7384" width="128" height="103"/>
-        <element name="PLBaseEntity" positionX="-3827" positionY="-7587" width="128" height="103"/>
+        <element name="PLBaseEntity" positionX="-3827" positionY="-7587" width="128" height="118"/>
+        <element name="SmartPlaylistEntity" positionX="-3827" positionY="-7447" width="128" height="73"/>
     </elements>
 </model>

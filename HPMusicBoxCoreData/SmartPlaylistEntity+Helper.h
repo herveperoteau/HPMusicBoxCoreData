@@ -11,4 +11,6 @@
 
 @interface SmartPlaylistEntity(Helper)
 
+-(NSString *) toString;
+
 @end

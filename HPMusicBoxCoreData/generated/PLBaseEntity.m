@@ -2,7 +2,7 @@
 //  PLBaseEntity.m
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 05/08/13.
+//  Created by Hervé PEROTEAU on 06/08/13.
 //  Copyright (c) 2013 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -12,8 +12,9 @@
 @implementation PLBaseEntity
 
 @dynamic count;
+@dynamic dateCreate;
 @dynamic dateLastCount;
 @dynamic title;
-@dynamic dateCreate;
+@dynamic uuid;
 
 @end

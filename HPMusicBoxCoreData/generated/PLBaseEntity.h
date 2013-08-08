@@ -2,7 +2,7 @@
 //  PLBaseEntity.h
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 05/08/13.
+//  Created by Hervé PEROTEAU on 06/08/13.
 //  Copyright (c) 2013 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -13,8 +13,9 @@
 @interface PLBaseEntity : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * count;
+@property (nonatomic, retain) NSDate * dateCreate;
 @property (nonatomic, retain) NSDate * dateLastCount;
 @property (nonatomic, retain) NSString * title;
-@property (nonatomic, retain) NSDate * dateCreate;
+@property (nonatomic, retain) NSString * uuid;
 
 @end

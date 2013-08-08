@@ -10,6 +10,15 @@
 #import "HPMusicBoxCoreData.h"
 #import "HPMusicBoxCoreData_Private.h"
 #import "HPMusicHelper.h"
+#import "CriteriaPLEntity.h"
+#import "ArtistEntity.h"
+#import "PLBaseEntity.h"
+#import "SmartPlaylistEntity.h"
+
+#define ArtistEntityName @"ArtistEntity"
+#define CriteriaPLEntityName @"CriteriaPLEntity"
+#define SmartPlaylistEntityName @"SmartPlaylistEntity"
+#define ErrorDomain @"HPMusicBoxCoreData"
 
 //#define FATAL_CORE_DATA_ERROR(__error__) \
 //NSLog(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
@@ -101,11 +110,13 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         return nil;
     }
 
-    ArtistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:@"ArtistEntity"
+    ArtistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:ArtistEntityName
                                                          inManagedObjectContext:context];
     
     entity.cleanName = cleanName;
     entity.dateUpdate = [NSDate date];
+    
+    [context save:error];
     
     return entity;
 }
@@ -121,7 +132,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"ArtistEntity"
+    NSEntityDescription *entity = [NSEntityDescription entityForName:ArtistEntityName
                                               inManagedObjectContext:context];
     [fetchRequest setEntity:entity];
     
@@ -145,11 +156,151 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return nil;
 }
 
+#pragma mark - API PlayLists with criterias
+
+-(NSArray *) getSmartPlaylists {
+
+    NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    NSError *error;
+
+    NSManagedObjectContext *context = [self managedObjectContext:&error];
+
+    if (error == nil) {
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity =[NSEntityDescription entityForName:SmartPlaylistEntityName
+                                                 inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSSortDescriptor *sort = [[NSSortDescriptor alloc]  initWithKey:@"title" ascending:YES];
+        [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+
+        if (error == nil) {
+            
+            [tmpResult addObjectsFromArray:fetchedObjects];
+        }
+    }
+    
+    return [NSArray arrayWithArray:tmpResult];
+}
+
+-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error {
+    
+    SmartPlaylistEntity *exist = [self findSmartPLaylistWithUUID:uuid error:error];
+    if (*error != nil) {
+        return nil;
+    }
+    
+    if (exist != nil) {
+        
+        NSString *msgErr = [NSString stringWithFormat:@"UUID %@ already used by %@", uuid, exist.title];
+        NSDictionary *infos = [NSDictionary dictionaryWithObject:msgErr  forKey:NSLocalizedDescriptionKey];
+        NSError *err = [NSError errorWithDomain:ErrorDomain code:ERROR_ALREADY_EXIST userInfo:infos];
+        
+        *error = err;
+
+        return nil;
+    }
+
+    SmartPlaylistEntity *result = [self createNewSmartPlaylist:title uuid:uuid error:error];
+
+    return result;
+}
+
+-(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid error:(NSError **) error {
+    
+    NSManagedObjectContext *context = [self managedObjectContext:error];
+    if (*error != nil) {
+        return nil;
+    }
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:SmartPlaylistEntityName
+                                              inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@", uuid];
+    
+    [fetchRequest setPredicate:predicate];
+    
+    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                     error:error];
+    
+    if (*error != nil) {
+        return nil;
+    }
+    
+    if (fetchedObjects.count > 0) {
+        
+        SmartPlaylistEntity *result = fetchedObjects[0];
+        return result;
+    }
+    
+    return nil;
+}
+
+
+-(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error {
+    
+    NSManagedObjectContext *context = [self managedObjectContext:error];
+    if (*error != nil) {
+        return nil;
+    }
+    
+    SmartPlaylistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:SmartPlaylistEntityName
+                                                                inManagedObjectContext:context];
+    
+    entity.title = title;
+    entity.uuid = uuid;
+    entity.dateCreate = [NSDate date];
+    
+    [context save:error];
+    
+    return entity;
+}
+
+
+-(CriteriaPLEntity *) createCriteriaInPlaylist:(SmartPlaylistEntity *)playlist error:(NSError **) error {
+    
+    NSManagedObjectContext *context = [self managedObjectContext:error];
+    if (*error != nil) {
+        return nil;
+    }
+    
+    CriteriaPLEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:CriteriaPLEntityName
+                                                             inManagedObjectContext:context];
+    
+
+    entity.playlist = playlist;
+    
+    [context save:error];
+    
+    return entity;
+}
+
+
+#pragma mark - Delete, Save
+
 -(BOOL) save:(NSError **) error {
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
     
     return [context save:error];
+}
+
+-(void) deleteObject:(NSManagedObject *) object error:(NSError **) error {
+    
+    NSManagedObjectContext *context = [self managedObjectContext:error];
+    if (*error != nil) {
+        return;
+    }
+    
+    [context deleteObject:object];
+    [context save:error];
 }
 
 

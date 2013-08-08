@@ -10,6 +10,8 @@
 #import "HPMusicBoxCoreData.h"
 #import "HPMusicBoxCoreData_Private.h"
 #import "ArtistEntity+Helper.h"
+#import "CriteriaPLEntity.h"
+#import "SmartPlaylistEntity+Helper.h"
 
 @interface HPMusicBoxCoreDataTests : XCTestCase
 
@@ -22,6 +24,7 @@
 @implementation HPMusicBoxCoreDataTests {
     
     HPMusicBoxCoreData *coredata;
+    
 }
 
 - (void)setUp
@@ -62,6 +65,70 @@
     XCTAssertEqualObjects(entity.cleanName, cleanName, @"Bad value in cleanName field");
     XCTAssertNil(error, @"error: %@", [error localizedDescription]);
 }
+
+- (void)testSmartPlaylist
+{
+    NSError *error;
+    
+    int NBPLAYLIST=10;
+    int NBCRIT=5;
+    
+    for (int i=0; i<NBPLAYLIST; i++) {
+    
+        NSString *title = [NSString stringWithFormat:@"Playlist n°%d", (i+1)];
+        
+        NSString *uuid = [[NSUUID UUID] UUIDString];
+        
+        SmartPlaylistEntity *playlist = [coredata createSmartPlaylist:title
+                                                                 uuid:uuid
+                                                                error:&error];
+        
+        XCTAssertNil(error, @"error: %@", [error localizedDescription]);
+        XCTAssertNotNil(playlist, @"%@ not created ???", title);
+        
+        for (int j=0; j<NBCRIT; j++) {
+            
+            CriteriaPLEntity *criteria = [coredata createCriteriaInPlaylist:playlist error:&error];
+            XCTAssertNil(error, @"error: %@", [error localizedDescription]);
+
+            BOOL inverseOK = [playlist.criterias containsObject:criteria];
+
+            XCTAssertTrue(inverseOK, @"Relation inverse pas mise a jour sur playlist %@ ???", playlist.title);
+            
+            NSString *condition = @"Equals";
+            NSString *key = [NSString stringWithFormat:@"Key%d", (j+1)];
+            NSString *val = [NSString stringWithFormat:@"Value%d", (j+1)];
+            
+            criteria.condition = condition;
+            criteria.key = key;
+            criteria.value = val;
+        }
+    }
+    
+    NSArray *playlists = [coredata getSmartPlaylists];
+    
+    XCTAssertNotNil(playlists, @"Aucune playlist ???");
+    
+    BOOL equals = (playlists.count == NBPLAYLIST);
+   
+    XCTAssertTrue(equals, @"Bad count %d playlists <> %d ???", NBPLAYLIST, playlists.count);
+    
+    for (SmartPlaylistEntity *playlist in playlists) {
+        
+        NSLog(@"%@", [playlist toString]);
+        
+        equals = (playlist.criterias.count == NBCRIT);
+
+        XCTAssertTrue(equals, @"Bad count %d criterias on pl %@ ???", NBCRIT, playlist.title);
+    }
+}
+
+//-(NSArray *) getSmartPlaylists;
+//
+//-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error;
+//
+//-(CriteriaPLEntity *) createCriteriaInPlaylist:(SmartPlaylistEntity *)playlist error:(NSError **) error;
+
 
 //- (void)testSimulError
 //{

@@ -2,7 +2,7 @@
 //  CriteriaPLEntity.m
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 05/08/13.
+//  Created by Hervé PEROTEAU on 06/08/13.
 //  Copyright (c) 2013 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -12,8 +12,8 @@
 
 @implementation CriteriaPLEntity
 
-@dynamic key;
 @dynamic condition;
+@dynamic key;
 @dynamic value;
 @dynamic playlist;
 

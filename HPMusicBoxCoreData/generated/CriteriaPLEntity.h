@@ -2,7 +2,7 @@
 //  CriteriaPLEntity.h
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 05/08/13.
+//  Created by Hervé PEROTEAU on 06/08/13.
 //  Copyright (c) 2013 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -13,8 +13,8 @@
 
 @interface CriteriaPLEntity : NSManagedObject
 
-@property (nonatomic, retain) NSString * key;
 @property (nonatomic, retain) NSString * condition;
+@property (nonatomic, retain) NSString * key;
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) SmartPlaylistEntity *playlist;
 
