@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.description = 'CoreData MusicBox'
   s.platform = :ios
   s.source = { :git => "https://github.com/herveperoteau/HPMusicBoxCoreData.git"}
-  s.source_files = 'HPMusicBoxCoreData'
+  s.source_files = 'HPMusicBoxCoreData/**/*.{h,m}'
   s.requires_arc = true
   s.resources = ["HPMusicBoxCoreData/*.xcdatamodeld"]
 end

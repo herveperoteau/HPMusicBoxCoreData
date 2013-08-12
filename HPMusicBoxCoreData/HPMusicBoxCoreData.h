@@ -36,7 +36,7 @@
 
 #pragma mark - API PlayLists with criterias
 
--(NSArray *) getSmartPlaylists;
+-(NSArray *) getSmartPlaylists:(NSError **) error;
 
 -(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error;
 

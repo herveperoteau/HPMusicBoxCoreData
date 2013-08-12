@@ -158,14 +158,13 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 #pragma mark - API PlayLists with criterias
 
--(NSArray *) getSmartPlaylists {
+-(NSArray *) getSmartPlaylists:(NSError **) error {
 
     NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
-    NSError *error;
 
-    NSManagedObjectContext *context = [self managedObjectContext:&error];
+    NSManagedObjectContext *context = [self managedObjectContext:error];
 
-    if (error == nil) {
+    if (*error == nil) {
         
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         
@@ -176,9 +175,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         NSSortDescriptor *sort = [[NSSortDescriptor alloc]  initWithKey:@"title" ascending:YES];
         [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
         
-        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:error];
 
-        if (error == nil) {
+        if (*error == nil) {
             
             [tmpResult addObjectsFromArray:fetchedObjects];
         }

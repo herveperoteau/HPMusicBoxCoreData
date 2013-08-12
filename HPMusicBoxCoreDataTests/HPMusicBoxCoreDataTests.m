@@ -105,7 +105,9 @@
         }
     }
     
-    NSArray *playlists = [coredata getSmartPlaylists];
+    NSArray *playlists = [coredata getSmartPlaylists:&error];
+    
+    XCTAssertNil(error, @"Error=%@", [error localizedDescription]);
     
     XCTAssertNotNil(playlists, @"Aucune playlist ???");
     
