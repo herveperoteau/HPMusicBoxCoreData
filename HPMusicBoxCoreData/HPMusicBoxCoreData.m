@@ -186,8 +186,10 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return [NSArray arrayWithArray:tmpResult];
 }
 
--(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error {
+-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title error:(NSError **) error {
     
+    NSString *uuid = [[NSUUID UUID] UUIDString];
+
     SmartPlaylistEntity *exist = [self findSmartPLaylistWithUUID:uuid error:error];
     if (*error != nil) {
         return nil;

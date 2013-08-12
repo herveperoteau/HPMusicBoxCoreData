@@ -38,7 +38,7 @@
 
 -(NSArray *) getSmartPlaylists:(NSError **) error;
 
--(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error;
+-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title error:(NSError **) error;
 
 -(CriteriaPLEntity *) createCriteriaInPlaylist:(SmartPlaylistEntity *)playlist error:(NSError **) error;
 

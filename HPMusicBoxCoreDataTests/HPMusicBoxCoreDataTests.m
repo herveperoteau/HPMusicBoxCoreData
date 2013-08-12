@@ -77,10 +77,7 @@
     
         NSString *title = [NSString stringWithFormat:@"Playlist n°%d", (i+1)];
         
-        NSString *uuid = [[NSUUID UUID] UUIDString];
-        
         SmartPlaylistEntity *playlist = [coredata createSmartPlaylist:title
-                                                                 uuid:uuid
                                                                 error:&error];
         
         XCTAssertNil(error, @"error: %@", [error localizedDescription]);
