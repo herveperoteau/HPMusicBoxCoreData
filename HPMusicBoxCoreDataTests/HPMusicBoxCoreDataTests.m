@@ -85,6 +85,7 @@
         
         XCTAssertNil(error, @"error: %@", [error localizedDescription]);
         XCTAssertNotNil(playlist, @"%@ not created ???", title);
+        XCTAssertNil(playlist.count, @"Bizarre count is not nil !!!");
         
         for (int j=0; j<NBCRIT; j++) {
             
