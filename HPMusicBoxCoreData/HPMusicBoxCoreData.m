@@ -86,14 +86,14 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     ArtistEntity *entity = nil;
     
     entity = [self findArtistWithName:fullName error:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
 
     if (!entity) {
         
         entity = [self createArtistWithName:fullName error:error];
-        if (*error != nil) {
+        if (error && *error != nil) {
             return nil;
         }
     }
@@ -106,7 +106,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
 
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
 
@@ -126,7 +126,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
     
@@ -143,7 +143,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
                                                      error:error];
     
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
     
@@ -164,7 +164,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
     NSManagedObjectContext *context = [self managedObjectContext:error];
 
-    if (*error == nil) {
+    if (error== NULL || *error == nil) {
         
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         
@@ -177,7 +177,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:error];
 
-        if (*error == nil) {
+        if (error== NULL || *error == nil) {
             
             [tmpResult addObjectsFromArray:fetchedObjects];
         }
@@ -191,7 +191,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSString *uuid = [[NSUUID UUID] UUIDString];
 
     SmartPlaylistEntity *exist = [self findSmartPLaylistWithUUID:uuid error:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
     
@@ -201,7 +201,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         NSDictionary *infos = [NSDictionary dictionaryWithObject:msgErr  forKey:NSLocalizedDescriptionKey];
         NSError *err = [NSError errorWithDomain:ErrorDomain code:ERROR_ALREADY_EXIST userInfo:infos];
         
-        *error = err;
+        if (error != NULL)
+            *error = err;
 
         return nil;
     }
@@ -214,7 +215,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 -(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid error:(NSError **) error {
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
     
@@ -231,7 +232,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
                                                      error:error];
     
-    if (*error != nil) {
+    if (error && *error != nil) {
+
         return nil;
     }
     
@@ -248,7 +250,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 -(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error {
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
     
@@ -264,19 +266,15 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return entity;
 }
 
-
--(CriteriaPLEntity *) createCriteriaInPlaylist:(SmartPlaylistEntity *)playlist error:(NSError **) error {
+-(CriteriaPLEntity *) createCriteria:(NSError **) error {
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return nil;
     }
     
     CriteriaPLEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:CriteriaPLEntityName
                                                              inManagedObjectContext:context];
-    
-
-    entity.playlist = playlist;
     
     [context save:error];
     
@@ -296,7 +294,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 -(void) deleteObject:(NSManagedObject *) object error:(NSError **) error {
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (*error != nil) {
+    if (error && *error != nil) {
         return;
     }
     
@@ -378,7 +376,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         NSMutableDictionary* details = [NSMutableDictionary dictionary];
         [details setValue:errorMsg forKey:NSLocalizedDescriptionKey];
         
-        *error = [NSError errorWithDomain:@"coredata" code:500 userInfo:details];
+        if (error != NULL)
+            *error = [NSError errorWithDomain:@"coredata" code:500 userInfo:details];
         
         //FATAL_CORE_DATA_ERROR(error);
     }

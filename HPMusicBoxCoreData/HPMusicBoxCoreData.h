@@ -40,7 +40,7 @@
 
 -(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title error:(NSError **) error;
 
--(CriteriaPLEntity *) createCriteriaInPlaylist:(SmartPlaylistEntity *)playlist error:(NSError **) error;
+-(CriteriaPLEntity *) createCriteria:(NSError **) error;
 
 #pragma mark - Delete, Save
 

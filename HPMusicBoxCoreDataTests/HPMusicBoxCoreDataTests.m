@@ -86,9 +86,11 @@
         
         for (int j=0; j<NBCRIT; j++) {
             
-            CriteriaPLEntity *criteria = [coredata createCriteriaInPlaylist:playlist error:&error];
+            CriteriaPLEntity *criteria = [coredata createCriteria:&error];
             XCTAssertNil(error, @"error: %@", [error localizedDescription]);
 
+            criteria.playlist = playlist;
+            
             BOOL inverseOK = [playlist.criterias containsObject:criteria];
 
             XCTAssertTrue(inverseOK, @"Relation inverse pas mise a jour sur playlist %@ ???", playlist.title);
