@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3389" systemVersion="12E55" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3396" systemVersion="12F37" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="ArtistEntity" representedClassName="ArtistEntity" syncable="YES">
         <attribute name="cleanName" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="dateUpdate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -23,9 +23,9 @@
         <relationship name="criterias" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="CriteriaPLEntity" inverseName="playlist" inverseEntity="CriteriaPLEntity" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ArtistEntity" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="CriteriaPLEntity" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="PLBaseEntity" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="SmartPlaylistEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ArtistEntity" positionX="-342" positionY="-135" width="128" height="90"/>
+        <element name="CriteriaPLEntity" positionX="-135" positionY="-285" width="128" height="105"/>
+        <element name="PLBaseEntity" positionX="-344" positionY="-423" width="128" height="120"/>
+        <element name="SmartPlaylistEntity" positionX="-344" positionY="-255" width="128" height="75"/>
     </elements>
 </model>
