@@ -15,10 +15,12 @@
 #import "PLBaseEntity.h"
 #import "SmartPlaylistEntity.h"
 
+#define AlbumEntityName @"AlbumEntity"
 #define ArtistEntityName @"ArtistEntity"
 #define CriteriaPLEntityName @"CriteriaPLEntity"
 #define SmartPlaylistEntityName @"SmartPlaylistEntity"
 #define ErrorDomain @"HPMusicBoxCoreData"
+
 
 //#define FATAL_CORE_DATA_ERROR(__error__) \
 //NSLog(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
@@ -279,6 +281,85 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     [context save:error];
     
     return entity;
+}
+
+
+#pragma mark - Album : indice satisfaction
+
+// return Array of AlbumEntity
+-(NSArray *) getAlbumsEntities:(NSError **) error {
+    
+    NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    
+    NSManagedObjectContext *context = [self managedObjectContext:error];
+    
+    if (error== NULL || *error == nil) {
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity =[NSEntityDescription entityForName:AlbumEntityName
+                                                 inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSSortDescriptor *sortByArtist = [[NSSortDescriptor alloc]  initWithKey:@"artistCleanName" ascending:YES];
+        NSSortDescriptor *sortByYear = [[NSSortDescriptor alloc]  initWithKey:@"clean" ascending:YES];
+        
+        [fetchRequest setSortDescriptors:@[sortByArtist, sortByYear]];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:error];
+        
+        if (error== NULL || *error == nil) {
+            
+            [tmpResult addObjectsFromArray:fetchedObjects];
+        }
+    }
+    
+    return [NSArray arrayWithArray:tmpResult];
+}
+
+-(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum error:(NSError **) error {
+    
+    AlbumEntity *result = nil;
+    
+    NSManagedObjectContext *context = [self managedObjectContext:error];
+    if (error && *error != nil) {
+        return nil;
+    }
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity = [NSEntityDescription entityForName:AlbumEntityName
+                                              inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"albumId == %@", keyAlbum];
+    
+    [fetchRequest setPredicate:predicate];
+    
+    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                     error:error];
+    
+    if (error && *error != nil) {
+        return nil;
+    }
+    
+    if (fetchedObjects.count == 0) {
+     
+        // create ...
+        
+        result = [NSEntityDescription insertNewObjectForEntityForName:AlbumEntityName
+                                                            inManagedObjectContext:context];
+        
+        result.albumId = keyAlbum;
+        
+        [context save:error];
+    }
+    else {
+        
+        result = fetchedObjects[0];
+    }
+    
+    return result;
 }
 
 

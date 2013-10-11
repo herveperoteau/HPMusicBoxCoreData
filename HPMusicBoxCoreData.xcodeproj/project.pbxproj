@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		090FDAED1807C20E00635B6C /* AlbumEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 090FDAEC1807C20E00635B6C /* AlbumEntity.m */; };
+		090FDAF01807C2B600635B6C /* AlbumEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */; };
 		09377CCB179CFE3F00CCABF0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CCA179CFE3F00CCABF0 /* Foundation.framework */; };
 		09377CD0179CFE3F00CCABF0 /* HPMusicBoxCoreData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 09377CCF179CFE3F00CCABF0 /* HPMusicBoxCoreData.h */; };
 		09377CD2179CFE3F00CCABF0 /* HPMusicBoxCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 09377CD1179CFE3F00CCABF0 /* HPMusicBoxCoreData.m */; };
@@ -62,6 +64,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		090FDAEB1807C20E00635B6C /* AlbumEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumEntity.h; sourceTree = "<group>"; };
+		090FDAEC1807C20E00635B6C /* AlbumEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumEntity.m; sourceTree = "<group>"; };
+		090FDAEE1807C2B600635B6C /* AlbumEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlbumEntity+Helper.h"; sourceTree = "<group>"; };
+		090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AlbumEntity+Helper.m"; sourceTree = "<group>"; };
 		09377CC7179CFE3F00CCABF0 /* libHPMusicBoxCoreData.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHPMusicBoxCoreData.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		09377CCA179CFE3F00CCABF0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		09377CCE179CFE3F00CCABF0 /* HPMusicBoxCoreData-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HPMusicBoxCoreData-Prefix.pch"; sourceTree = "<group>"; };
@@ -162,15 +168,17 @@
 		09377CCC179CFE3F00CCABF0 /* HPMusicBoxCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				09377CF0179CFEBD00CCABF0 /* MusicBoxModel.xcdatamodeld */,
-				098E487817AF745F001E0FCB /* generated */,
+				090FDAEE1807C2B600635B6C /* AlbumEntity+Helper.h */,
+				090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */,
 				098E485017AF7154001E0FCB /* ArtistEntity+Helper.h */,
 				098E485117AF7154001E0FCB /* ArtistEntity+Helper.m */,
 				098E485417AF72DC001E0FCB /* CriteriaPLEntity+Helper.h */,
 				098E485517AF72DC001E0FCB /* CriteriaPLEntity+Helper.m */,
+				098E487817AF745F001E0FCB /* generated */,
 				09377CCF179CFE3F00CCABF0 /* HPMusicBoxCoreData.h */,
 				09377CD1179CFE3F00CCABF0 /* HPMusicBoxCoreData.m */,
 				09377CF8179E4BD200CCABF0 /* HPMusicBoxCoreData_Private.h */,
+				09377CF0179CFEBD00CCABF0 /* MusicBoxModel.xcdatamodeld */,
 				098E488917AF755D001E0FCB /* SmartPlaylistEntity+Helper.h */,
 				098E488A17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m */,
 				09377CCD179CFE3F00CCABF0 /* Supporting Files */,
@@ -207,6 +215,8 @@
 		098E487817AF745F001E0FCB /* generated */ = {
 			isa = PBXGroup;
 			children = (
+				090FDAEB1807C20E00635B6C /* AlbumEntity.h */,
+				090FDAEC1807C20E00635B6C /* AlbumEntity.m */,
 				09A9934117B0B9D8006C4552 /* ArtistEntity.h */,
 				09A9934217B0B9D8006C4552 /* ArtistEntity.m */,
 				09A9933D17B0B9D8006C4552 /* CriteriaPLEntity.h */,
@@ -341,6 +351,8 @@
 				098E488B17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m in Sources */,
 				09A9933F17B0B9D8006C4552 /* CriteriaPLEntity.m in Sources */,
 				09A9933717B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */,
+				090FDAF01807C2B600635B6C /* AlbumEntity+Helper.m in Sources */,
+				090FDAED1807C20E00635B6C /* AlbumEntity.m in Sources */,
 				098E485217AF7154001E0FCB /* ArtistEntity+Helper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

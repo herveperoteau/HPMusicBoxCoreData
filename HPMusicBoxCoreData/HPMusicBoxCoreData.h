@@ -10,6 +10,7 @@
 #import "ArtistEntity.h"
 #import "SmartPlaylistEntity.h"
 #import "CriteriaPLEntity.h"
+#import "AlbumEntity.h"
 
 #define ERROR_ALREADY_EXIST 1001
 
@@ -42,15 +43,26 @@
 
 -(CriteriaPLEntity *) createCriteria:(NSError **) error;
 
+
+#pragma mark - Album : indice satisfaction
+
+// return Array of AlbumEntity
+-(NSArray *) getAlbumsEntities:(NSError **) error;
+
+-(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum error:(NSError **) error;
+
+
 #pragma mark - Delete, Save
 
 -(void) deleteObject:(NSManagedObject *) object error:(NSError **) error;
-
 
 /**
  * Save all modifications in DataBase
  * You need call this method when your application ended or switch in background mode
  */
 -(BOOL) save:(NSError **) error;
+
+
+
 
 @end
