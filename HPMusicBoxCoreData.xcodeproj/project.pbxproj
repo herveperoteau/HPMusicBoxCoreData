@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		090FDAED1807C20E00635B6C /* AlbumEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 090FDAEC1807C20E00635B6C /* AlbumEntity.m */; };
 		090FDAF01807C2B600635B6C /* AlbumEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */; };
 		09377CCB179CFE3F00CCABF0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09377CCA179CFE3F00CCABF0 /* Foundation.framework */; };
 		09377CD0179CFE3F00CCABF0 /* HPMusicBoxCoreData.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 09377CCF179CFE3F00CCABF0 /* HPMusicBoxCoreData.h */; };
@@ -29,6 +28,7 @@
 		098E485717AF72DC001E0FCB /* CriteriaPLEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 098E485517AF72DC001E0FCB /* CriteriaPLEntity+Helper.m */; };
 		098E488B17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 098E488A17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m */; };
 		098E488C17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 098E488A17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m */; };
+		09A8AD51181E38FE00577DD5 /* AlbumEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A8AD50181E38FE00577DD5 /* AlbumEntity.m */; };
 		09A9933717B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9933617B0B9D7006C4552 /* SmartPlaylistEntity.m */; };
 		09A9933817B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9933617B0B9D7006C4552 /* SmartPlaylistEntity.m */; };
 		09A9933B17B0B9D8006C4552 /* PLBaseEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9933A17B0B9D8006C4552 /* PLBaseEntity.m */; };
@@ -64,8 +64,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		090FDAEB1807C20E00635B6C /* AlbumEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumEntity.h; sourceTree = "<group>"; };
-		090FDAEC1807C20E00635B6C /* AlbumEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumEntity.m; sourceTree = "<group>"; };
 		090FDAEE1807C2B600635B6C /* AlbumEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlbumEntity+Helper.h"; sourceTree = "<group>"; };
 		090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AlbumEntity+Helper.m"; sourceTree = "<group>"; };
 		09377CC7179CFE3F00CCABF0 /* libHPMusicBoxCoreData.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libHPMusicBoxCoreData.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,6 +89,8 @@
 		098E485517AF72DC001E0FCB /* CriteriaPLEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CriteriaPLEntity+Helper.m"; sourceTree = "<group>"; };
 		098E488917AF755D001E0FCB /* SmartPlaylistEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SmartPlaylistEntity+Helper.h"; sourceTree = "<group>"; };
 		098E488A17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SmartPlaylistEntity+Helper.m"; sourceTree = "<group>"; };
+		09A8AD4F181E38FE00577DD5 /* AlbumEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlbumEntity.h; sourceTree = "<group>"; };
+		09A8AD50181E38FE00577DD5 /* AlbumEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlbumEntity.m; sourceTree = "<group>"; };
 		09A9933517B0B9D7006C4552 /* SmartPlaylistEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmartPlaylistEntity.h; sourceTree = "<group>"; };
 		09A9933617B0B9D7006C4552 /* SmartPlaylistEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmartPlaylistEntity.m; sourceTree = "<group>"; };
 		09A9933917B0B9D8006C4552 /* PLBaseEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLBaseEntity.h; sourceTree = "<group>"; };
@@ -215,8 +215,8 @@
 		098E487817AF745F001E0FCB /* generated */ = {
 			isa = PBXGroup;
 			children = (
-				090FDAEB1807C20E00635B6C /* AlbumEntity.h */,
-				090FDAEC1807C20E00635B6C /* AlbumEntity.m */,
+				09A8AD4F181E38FE00577DD5 /* AlbumEntity.h */,
+				09A8AD50181E38FE00577DD5 /* AlbumEntity.m */,
 				09A9934117B0B9D8006C4552 /* ArtistEntity.h */,
 				09A9934217B0B9D8006C4552 /* ArtistEntity.m */,
 				09A9933D17B0B9D8006C4552 /* CriteriaPLEntity.h */,
@@ -352,8 +352,8 @@
 				09A9933F17B0B9D8006C4552 /* CriteriaPLEntity.m in Sources */,
 				09A9933717B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */,
 				090FDAF01807C2B600635B6C /* AlbumEntity+Helper.m in Sources */,
-				090FDAED1807C20E00635B6C /* AlbumEntity.m in Sources */,
 				098E485217AF7154001E0FCB /* ArtistEntity+Helper.m in Sources */,
+				09A8AD51181E38FE00577DD5 /* AlbumEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,7 +2,7 @@
 //  AlbumEntity.m
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 11/10/13.
+//  Created by Hervé PEROTEAU on 28/10/2013.
 //  Copyright (c) 2013 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -11,15 +11,16 @@
 
 @implementation AlbumEntity
 
-@dynamic title;
+@dynamic albumId;
 @dynamic artist;
-@dynamic styles;
-@dynamic year;
-@dynamic indiceSatisfaction;
-@dynamic indiceLastShare;
+@dynamic artistCleanName;
 @dynamic dateLastCalcul;
 @dynamic dateLastShare;
-@dynamic albumId;
-@dynamic artistCleanName;
+@dynamic indiceLastShare;
+@dynamic indiceSatisfaction;
+@dynamic styles;
+@dynamic title;
+@dynamic year;
+@dynamic rank;
 
 @end
