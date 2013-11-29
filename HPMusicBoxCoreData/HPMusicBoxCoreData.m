@@ -34,6 +34,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 @interface HPMusicBoxCoreData()
 
 @property (strong, nonatomic) NSURL *documentsURL;
+@property BOOL persistantStoreAvailable;
 
 @end
 
@@ -123,7 +124,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     entity.cleanName = cleanName;
     entity.dateUpdate = [NSDate date];
     
-    [context save:error];
+    if (self.persistantStoreAvailable) {
+        [context save:error];
+    }
     
     return entity;
 }
@@ -268,7 +271,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     entity.uuid = uuid;
     entity.dateCreate = [NSDate date];
     
-    [context save:error];
+    if (self.persistantStoreAvailable) {
+        [context save:error];
+    }
     
     return entity;
 }
@@ -283,7 +288,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     CriteriaPLEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:CriteriaPLEntityName
                                                              inManagedObjectContext:context];
     
-    [context save:error];
+    if (self.persistantStoreAvailable) {
+        [context save:error];
+    }
     
     return entity;
 }
@@ -357,7 +364,9 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         result.albumId = keyAlbum;
         
-        [context save:error];
+        if (self.persistantStoreAvailable) {
+            [context save:error];
+        }
     }
     else {
         
@@ -374,7 +383,11 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     NSManagedObjectContext *context = [self managedObjectContext:error];
     
-    return [context save:error];
+    if (self.persistantStoreAvailable) {
+        return [context save:error];
+    }
+
+    return NO;
 }
 
 -(void) deleteObject:(NSManagedObject *) object error:(NSError **) error {
@@ -554,6 +567,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         [moc performBlockAndWait:^{
             
             [moc setPersistentStoreCoordinator:coordinator];
+
+            self.persistantStoreAvailable = YES;
             
             [[NSNotificationCenter defaultCenter] addObserver:self
                                                      selector:@selector(mergeChangesFrom_iCloud:)
