@@ -81,6 +81,11 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+-(void) setup {
+    
+    [self managedObjectContext:NULL];
+}
+
 #pragma mark - Facade CoreData
 
 -(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName error:(NSError **) error{
@@ -384,69 +389,213 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 }
 
 
-#pragma mark - Core Data stack
+#pragma mark - Core Data stack (before iCloud)
 
-// Returns the managed object context for the application.
-// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-- (NSManagedObjectContext *)managedObjectContext:(NSError **) error
-{
-    [self checkSimulError:error];
-    
-    if (_managedObjectContext != nil) {
-        return _managedObjectContext;
-    }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator:error];
-    if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    return _managedObjectContext;
-}
+//// Returns the managed object context for the application.
+//// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+//- (NSManagedObjectContext *)managedObjectContext:(NSError **) error
+//{
+//    [self checkSimulError:error];
+//    
+//    if (_managedObjectContext != nil) {
+//        return _managedObjectContext;
+//    }
+//    
+//    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator:error];
+//    if (coordinator != nil) {
+//        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+//        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+//    }
+//    return _managedObjectContext;
+//}
+//
+//// Returns the managed object model for the application.
+//// If the model doesn't already exist, it is created from the application's model.
+//- (NSManagedObjectModel *)managedObjectModel:(NSError **) error
+//{
+//    if (_managedObjectModel != nil) {
+//        return _managedObjectModel;
+//    }
+//    
+//    // Marche pas sur le test unitaire de la lib
+//    //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ModelTest" withExtension:@"momd"];
+//    //NSLog(@"modelURL=%@", modelURL);
+//    //_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+//    
+//    _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+//    
+//    return _managedObjectModel;
+//}
+//
+//// Returns the persistent store coordinator for the application.
+//// If the coordinator doesn't already exist, it is created and the application's store added to it.
+//- (NSPersistentStoreCoordinator *)persistentStoreCoordinator:(NSError **) error
+//{
+//    if (_persistentStoreCoordinator != nil) {
+//        return _persistentStoreCoordinator;
+//    }
+//    
+//    NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"MusicBox.sqlite"];
+//    
+//    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel:error]];
+//    
+//    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+//                                                   configuration:nil
+//                                                             URL:storeURL
+//                                                         options:nil
+//                                                           error:error]) {
+//        
+//        //FATAL_CORE_DATA_ERROR(error);
+//        
+//        return nil;
+//    }
+//    
+//    return _persistentStoreCoordinator;
+//}
 
-// Returns the managed object model for the application.
-// If the model doesn't already exist, it is created from the application's model.
-- (NSManagedObjectModel *)managedObjectModel:(NSError **) error
-{
+
+#pragma mark - Core Data stack (with iCloud)
+
+-(NSManagedObjectModel *) managedObjectModel {
+    
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
     
-    // Marche pas sur le test unitaire de la lib
-    //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ModelTest" withExtension:@"momd"];
-    //NSLog(@"modelURL=%@", modelURL);
-    //_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    NSLog(@"%@ : init managedObjectModel ...", self.class);
     
     _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
     
     return _managedObjectModel;
 }
 
-// Returns the persistent store coordinator for the application.
-// If the coordinator doesn't already exist, it is created and the application's store added to it.
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator:(NSError **) error
-{
+-(NSPersistentStoreCoordinator *)persistentStoreCoordinator {
+    
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"MusicBox.sqlite"];
+    NSLog(@"%@ : init persistentStoreCoordinator ...", self.class);
     
-    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel:error]];
+    NSURL *storeUrl = [self.documentsURL URLByAppendingPathComponent:COREDATA_DBNAME];
     
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                   configuration:nil
-                                                             URL:storeURL
-                                                         options:nil
-                                                           error:error]) {
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    
+    NSPersistentStoreCoordinator *psc = _persistentStoreCoordinator;
+    
+    // download preexisting iCloud content
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        //FATAL_CORE_DATA_ERROR(error);
+        NSFileManager *fileManager = [NSFileManager defaultManager];
         
-        return nil;
-    }
+        NSURL *transactionLogsURL = [fileManager URLForUbiquityContainerIdentifier:nil];
+        NSString *coreDataCloudContent = [[transactionLogsURL path] stringByAppendingPathComponent:ICLOUD_FOLDER_UPDATE];
+        transactionLogsURL = [NSURL fileURLWithPath:coreDataCloudContent];
+        
+        NSLog(@"coreData: transactionLogsURL=%@", transactionLogsURL);
+        
+        // building options for coordinator
+        
+        NSDictionary *options = @{NSPersistentStoreUbiquitousContentNameKey:ICLOUD_CONTENT_NAME_KEY,
+                                  NSPersistentStoreUbiquitousContentURLKey:transactionLogsURL,
+                                  NSMigratePersistentStoresAutomaticallyOption:[NSNumber numberWithBool:YES]};
+        
+        // Add persistant Store
+        
+        [psc lock];
+        
+        NSError *error;
+        
+        if ( ![psc addPersistentStoreWithType:NSSQLiteStoreType
+                                configuration:nil
+                                          URL:storeUrl
+                                      options:options
+                                        error:&error]) {
+            
+            NSLog(@"CoreData Error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        [psc unlock];
+        
+        // Post notif to refresh UI
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            NSLog(@"Persistent store added correctly : post notif %@ to UI", NOTIFICATION_MUSICBOX_COREDATA_ICLOUD_REFRESH);
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MUSICBOX_COREDATA_ICLOUD_REFRESH
+                                                                object:self
+                                                              userInfo:nil];
+        });
+    });
     
     return _persistentStoreCoordinator;
 }
+
+-(NSManagedObjectContext *) managedObjectContext:(NSError **) error {
+    
+    [self checkSimulError:error];
+
+    if (_managedObjectContext) {
+        return _managedObjectContext;
+    }
+    
+    NSLog(@"%@ : init managedObjectContext ...", self.class);
+    
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    
+    if (coordinator) {
+        
+        // concurrency type
+        NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        
+        [moc performBlockAndWait:^{
+            
+            [moc setPersistentStoreCoordinator:coordinator];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(mergeChangesFrom_iCloud:)
+                                                         name:NSPersistentStoreDidImportUbiquitousContentChangesNotification
+                                                       object:coordinator];
+            
+        }];
+        
+        _managedObjectContext = moc;
+    }
+    
+    return _managedObjectContext;
+}
+
+-(void) mergeChangesFrom_iCloud:(NSNotification *)notification {
+    
+    NSManagedObjectContext *moc = [self managedObjectContext];
+    
+    [moc performBlock:^{
+        
+        [self mergeiCloudChanges:notification forContext:moc];
+    }];
+}
+
+-(void) mergeiCloudChanges:(NSNotification *)notification forContext:(NSManagedObjectContext *)moc {
+    
+    [moc mergeChangesFromContextDidSaveNotification:notification];
+    
+    // Post notif to refresh UI
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        NSLog(@"mergeiCloudChanges : post notif %@ to UI", NOTIFICATION_MUSICBOX_COREDATA_ICLOUD_REFRESH);
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_MUSICBOX_COREDATA_ICLOUD_REFRESH
+                                                            object:self
+                                                          userInfo:nil];
+    });
+}
+
+
+#pragma mark - Core Data stack (simul error)
 
 -(BOOL) checkSimulError:(NSError **) error {
     
