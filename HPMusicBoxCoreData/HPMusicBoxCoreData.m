@@ -404,70 +404,78 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 #pragma mark - Core Data stack (before iCloud)
 
-//// Returns the managed object context for the application.
-//// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
-//- (NSManagedObjectContext *)managedObjectContext:(NSError **) error
-//{
-//    [self checkSimulError:error];
-//    
-//    if (_managedObjectContext != nil) {
-//        return _managedObjectContext;
-//    }
-//    
-//    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator:error];
-//    if (coordinator != nil) {
-//        _managedObjectContext = [[NSManagedObjectContext alloc] init];
-//        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
-//    }
-//    return _managedObjectContext;
-//}
-//
-//// Returns the managed object model for the application.
-//// If the model doesn't already exist, it is created from the application's model.
-//- (NSManagedObjectModel *)managedObjectModel:(NSError **) error
-//{
-//    if (_managedObjectModel != nil) {
-//        return _managedObjectModel;
-//    }
-//    
-//    // Marche pas sur le test unitaire de la lib
-//    //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ModelTest" withExtension:@"momd"];
-//    //NSLog(@"modelURL=%@", modelURL);
-//    //_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
-//    
-//    _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
-//    
-//    return _managedObjectModel;
-//}
-//
-//// Returns the persistent store coordinator for the application.
-//// If the coordinator doesn't already exist, it is created and the application's store added to it.
-//- (NSPersistentStoreCoordinator *)persistentStoreCoordinator:(NSError **) error
-//{
-//    if (_persistentStoreCoordinator != nil) {
-//        return _persistentStoreCoordinator;
-//    }
-//    
-//    NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"MusicBox.sqlite"];
-//    
-//    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel:error]];
-//    
-//    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-//                                                   configuration:nil
-//                                                             URL:storeURL
-//                                                         options:nil
-//                                                           error:error]) {
-//        
-//        //FATAL_CORE_DATA_ERROR(error);
-//        
-//        return nil;
-//    }
-//    
-//    return _persistentStoreCoordinator;
-//}
+#ifndef WITH_ICLOUD
+
+// Returns the managed object context for the application.
+// If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
+- (NSManagedObjectContext *)managedObjectContext:(NSError **) error
+{
+    [self checkSimulError:error];
+    
+    if (_managedObjectContext != nil) {
+        return _managedObjectContext;
+    }
+    
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator:error];
+    if (coordinator != nil) {
+        _managedObjectContext = [[NSManagedObjectContext alloc] init];
+        [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
+    return _managedObjectContext;
+}
+
+// Returns the managed object model for the application.
+// If the model doesn't already exist, it is created from the application's model.
+- (NSManagedObjectModel *)managedObjectModel:(NSError **) error
+{
+    if (_managedObjectModel != nil) {
+        return _managedObjectModel;
+    }
+    
+    // Marche pas sur le test unitaire de la lib
+    //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ModelTest" withExtension:@"momd"];
+    //NSLog(@"modelURL=%@", modelURL);
+    //_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
+    _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+    
+    return _managedObjectModel;
+}
+
+// Returns the persistent store coordinator for the application.
+// If the coordinator doesn't already exist, it is created and the application's store added to it.
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator:(NSError **) error
+{
+    if (_persistentStoreCoordinator != nil) {
+        return _persistentStoreCoordinator;
+    }
+    
+    NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"MusicBox.sqlite"];
+    
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel:error]];
+    
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                   configuration:nil
+                                                             URL:storeURL
+                                                         options:nil
+                                                           error:error]) {
+        
+        //FATAL_CORE_DATA_ERROR(error);
+        
+        return nil;
+    }
+    
+    self.persistantStoreAvailable = YES;
+    
+    return _persistentStoreCoordinator;
+}
+
+#endif
 
 
 #pragma mark - Core Data stack (with iCloud)
+
+#ifdef WITH_ICLOUD
 
 -(NSManagedObjectModel *) managedObjectModel {
     
@@ -608,6 +616,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                                                           userInfo:nil];
     });
 }
+
+#endif
 
 
 #pragma mark - Core Data stack (simul error)
