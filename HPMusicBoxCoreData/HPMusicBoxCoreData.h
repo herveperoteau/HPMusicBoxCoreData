@@ -50,8 +50,11 @@
 
 -(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title error:(NSError **) error;
 
+-(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error;
+
 -(CriteriaPLEntity *) createCriteria:(NSError **) error;
 
+-(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid error:(NSError **) error;
 
 #pragma mark - Album : indice satisfaction
 
