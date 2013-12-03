@@ -41,40 +41,38 @@
 
 /** create if not already exist
  */
--(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName error:(NSError **) error;
+-(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName;
 
 
 #pragma mark - API PlayLists with criterias
 
--(NSArray *) getSmartPlaylists:(NSError **) error;
+-(NSArray *) getSmartPlaylists;
 
--(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title error:(NSError **) error;
+-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title;
 
--(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error;
+-(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid;
 
--(CriteriaPLEntity *) createCriteria:(NSError **) error;
+-(CriteriaPLEntity *) createCriteria;
 
--(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid error:(NSError **) error;
+-(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid;
 
 #pragma mark - Album : indice satisfaction
 
 // return Array of AlbumEntity
--(NSArray *) getAlbumsEntities:(NSError **) error;
+-(NSArray *) getAlbumsEntities;
 
--(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum error:(NSError **) error;
+-(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum;
 
 
 #pragma mark - Delete, Save
 
--(void) deleteObject:(NSManagedObject *) object error:(NSError **) error;
+-(void) deleteObject:(NSManagedObject *) object;
 
 /**
  * Save all modifications in DataBase
  * You need call this method when your application ended or switch in background mode
  */
--(BOOL) save:(NSError **) error;
-
-
+-(BOOL) save;
 
 
 @end

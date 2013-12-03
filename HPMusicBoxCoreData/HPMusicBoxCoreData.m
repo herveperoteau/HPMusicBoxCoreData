@@ -34,17 +34,24 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 @interface HPMusicBoxCoreData()
 
 @property (strong, nonatomic) NSURL *documentsURL;
-@property BOOL persistantStoreAvailable;
 
 @end
 
-@implementation HPMusicBoxCoreData
+@implementation HPMusicBoxCoreData {
+    
+    NSOperationQueue *queue;
+}
 
 +(void) setBaseDocumentsURL:(NSURL *) docUrl {
     
     NSAssert(sharedMyManager == nil, @"setBaseDocumentsURL has no effect after call sharedManager method !!!");
     
     documentsURL = [docUrl copy];
+}
+
++(NSURL *) defaultStorageURL {
+    
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 +(HPMusicBoxCoreData *) sharedManager {
@@ -77,235 +84,274 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return self;
 }
 
-+(NSURL *) defaultStorageURL {
+-(id) init {
     
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    if ((self = [super init])) {
+        
+        queue = [[NSOperationQueue alloc] init];
+        queue.maxConcurrentOperationCount = 1;   // Thread confinement
+    }
+    
+    return self;
 }
 
 -(void) setup {
     
-    [self managedObjectContext:NULL];
+    if (_managedObjectContext == nil) {
+    
+        [queue addOperationWithBlock:^{
+            
+            [self managedObjectContext:NULL];
+        }];
+    }
 }
 
 #pragma mark - Facade CoreData
 
--(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName error:(NSError **) error{
+-(ArtistEntity *) findOrCreateArtistWithName:(NSString *) fullName {
     
     ArtistEntity *entity = nil;
     
-    entity = [self findArtistWithName:fullName error:error];
-    if (error && *error != nil) {
-        return nil;
-    }
+    entity = [self findArtistWithName:fullName];
 
     if (!entity) {
         
-        entity = [self createArtistWithName:fullName error:error];
-        if (error && *error != nil) {
-            return nil;
-        }
+        entity = [self createArtistWithName:fullName];
     }
 
     return entity;
 }
 
--(ArtistEntity *) createArtistWithName:(NSString *) fullName error:(NSError **) error {
+-(ArtistEntity *) createArtistWithName:(NSString *) fullName {
     
-    NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
 
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return nil;
-    }
-
-    ArtistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:ArtistEntityName
-                                                         inManagedObjectContext:context];
+    __block ArtistEntity *result = nil;
     
-    entity.cleanName = cleanName;
-    entity.dateUpdate = [NSDate date];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    if (self.persistantStoreAvailable) {
-        [context save:error];
-    }
-    
-    return entity;
-}
-
--(ArtistEntity *) findArtistWithName:(NSString *) fullName error:(NSError **) error {
-    
-    NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
-    
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return nil;
-    }
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    
-    NSEntityDescription *entity = [NSEntityDescription entityForName:ArtistEntityName
-                                              inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cleanName == %@", cleanName];
-    
-    [fetchRequest setPredicate:predicate];
-    
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
-                                                     error:error];
-    
-    if (error && *error != nil) {
-        return nil;
-    }
-    
-    if (fetchedObjects.count > 0) {
+    [queue addOperationWithBlock:^{
         
-        ArtistEntity *result = fetchedObjects[0];
-        return result;
-    }
+        NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
+
+        NSManagedObjectContext *context = _managedObjectContext;
+
+        ArtistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:ArtistEntityName
+                                                             inManagedObjectContext:context];
     
-    return nil;
+        entity.cleanName = cleanName;
+        entity.dateUpdate = [NSDate date];
+        
+        result = entity;
+    
+        [context save:NULL];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+    return result;
+}
+
+-(ArtistEntity *) findArtistWithName:(NSString *) fullName {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block ArtistEntity *result = nil;
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    [queue addOperationWithBlock:^{
+        
+        NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity = [NSEntityDescription entityForName:ArtistEntityName
+                                                  inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cleanName == %@", cleanName];
+        
+        [fetchRequest setPredicate:predicate];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                         error:NULL];
+        
+        if (fetchedObjects.count > 0) {
+            
+            result = fetchedObjects[0];
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+    return result;
 }
 
 #pragma mark - API PlayLists with criterias
 
--(NSArray *) getSmartPlaylists:(NSError **) error {
+-(NSArray *) getSmartPlaylists {
 
-    NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
 
-    NSManagedObjectContext *context = [self managedObjectContext:error];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    __block NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    
+    [queue addOperationWithBlock:^{
 
-    if (error== NULL || *error == nil) {
-        
+        NSManagedObjectContext *context = _managedObjectContext;
+
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         
         NSEntityDescription *entity =[NSEntityDescription entityForName:SmartPlaylistEntityName
                                                  inManagedObjectContext:context];
         [fetchRequest setEntity:entity];
         
-        NSSortDescriptor *sort = [[NSSortDescriptor alloc]  initWithKey:@"title" ascending:YES];
-        [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
         
-        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:error];
+        [fetchRequest setSortDescriptors:@[sortByTitle]];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:NULL];
+        
+        [tmpResult addObjectsFromArray:fetchedObjects];
 
-        if (error== NULL || *error == nil) {
-            
-            [tmpResult addObjectsFromArray:fetchedObjects];
-        }
-    }
+        dispatch_semaphore_signal(semaphore);
+    }];
     
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
     return [NSArray arrayWithArray:tmpResult];
 }
 
--(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title error:(NSError **) error {
+-(SmartPlaylistEntity *) createSmartPlaylist:(NSString *) title {
     
     NSString *uuid = [[NSUUID UUID] UUIDString];
 
-    SmartPlaylistEntity *exist = [self findSmartPLaylistWithUUID:uuid error:error];
-    if (error && *error != nil) {
-        return nil;
-    }
-    
-    if (exist != nil) {
-        
-        NSString *msgErr = [NSString stringWithFormat:@"UUID %@ already used by %@", uuid, exist.title];
-        NSDictionary *infos = [NSDictionary dictionaryWithObject:msgErr  forKey:NSLocalizedDescriptionKey];
-        NSError *err = [NSError errorWithDomain:ErrorDomain code:ERROR_ALREADY_EXIST userInfo:infos];
-        
-        if (error != NULL)
-            *error = err;
-
-        return nil;
-    }
-
-    SmartPlaylistEntity *result = [self createNewSmartPlaylist:title uuid:uuid error:error];
+    SmartPlaylistEntity *result = [self createNewSmartPlaylist:title uuid:uuid];
 
     return result;
 }
 
--(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid error:(NSError **) error {
+-(SmartPlaylistEntity *) findSmartPLaylistWithUUID:(NSString *) uuid {
     
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return nil;
-    }
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    
-    NSEntityDescription *entity = [NSEntityDescription entityForName:SmartPlaylistEntityName
-                                              inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@", uuid];
-    
-    [fetchRequest setPredicate:predicate];
-    
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
-                                                     error:error];
-    
-    if (error && *error != nil) {
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
 
-        return nil;
-    }
+    __block SmartPlaylistEntity *result = nil;
+
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    if (fetchedObjects.count > 0) {
+    [queue addOperationWithBlock:^{
+    
+        NSManagedObjectContext *context = _managedObjectContext;
+    
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+        NSEntityDescription *entity = [NSEntityDescription entityForName:SmartPlaylistEntityName
+                                                  inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+    
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@", uuid];
+    
+        [fetchRequest setPredicate:predicate];
+    
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                         error:NULL];
+    
+        if (fetchedObjects.count > 0) {
         
-        SmartPlaylistEntity *result = fetchedObjects[0];
-        return result;
-    }
+            result = fetchedObjects[0];
+        }
     
-    return nil;
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
 }
 
 
--(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid error:(NSError **) error {
+-(SmartPlaylistEntity *) createNewSmartPlaylist:(NSString *) title uuid:(NSString *)uuid {
     
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return nil;
-    }
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
     
-    SmartPlaylistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:SmartPlaylistEntityName
-                                                                inManagedObjectContext:context];
+    __block SmartPlaylistEntity *result = nil;
     
-    entity.title = title;
-    entity.uuid = uuid;
-    entity.dateCreate = [NSDate date];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    if (self.persistantStoreAvailable) {
-        [context save:error];
-    }
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
     
-    return entity;
+        SmartPlaylistEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:SmartPlaylistEntityName
+                                                                    inManagedObjectContext:context];
+    
+        entity.title = title;
+        entity.uuid = uuid;
+        entity.dateCreate = [NSDate date];
+        
+        result = entity;
+    
+        [context save:NULL];
+    
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+    return result;
 }
 
--(CriteriaPLEntity *) createCriteria:(NSError **) error {
+-(CriteriaPLEntity *) createCriteria {
     
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return nil;
-    }
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
     
-    CriteriaPLEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:CriteriaPLEntityName
-                                                             inManagedObjectContext:context];
+    __block CriteriaPLEntity *result = nil;
     
-    if (self.persistantStoreAvailable) {
-        [context save:error];
-    }
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    return entity;
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        CriteriaPLEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:CriteriaPLEntityName
+                                                                 inManagedObjectContext:context];
+    
+        result = entity;
+        
+        [context save:NULL];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
 }
 
 
 #pragma mark - Album : indice satisfaction
 
 // return Array of AlbumEntity
--(NSArray *) getAlbumsEntities:(NSError **) error {
+-(NSArray *) getAlbumsEntities {
     
-    NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
     
-    NSManagedObjectContext *context = [self managedObjectContext:error];
+    __block NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
     
-    if (error== NULL || *error == nil) {
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
         
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         
@@ -318,91 +364,110 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         [fetchRequest setSortDescriptors:@[sortByArtist, sortByYear]];
         
-        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:error];
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:NULL];
         
-        if (error== NULL || *error == nil) {
-            
-            [tmpResult addObjectsFromArray:fetchedObjects];
-        }
-    }
+        [tmpResult addObjectsFromArray:fetchedObjects];
     
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
     return [NSArray arrayWithArray:tmpResult];
 }
 
--(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum error:(NSError **) error {
+-(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum {
     
-    AlbumEntity *result = nil;
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
     
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return nil;
-    }
+    __block AlbumEntity *result = nil;
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    NSEntityDescription *entity = [NSEntityDescription entityForName:AlbumEntityName
-                                              inManagedObjectContext:context];
-    [fetchRequest setEntity:entity];
+    [queue addOperationWithBlock:^{
+
+        NSManagedObjectContext *context = _managedObjectContext;
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"albumId == %@", keyAlbum];
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
-    [fetchRequest setPredicate:predicate];
+        NSEntityDescription *entity = [NSEntityDescription entityForName:AlbumEntityName
+                                                  inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
     
-    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
-                                                     error:error];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"albumId == %@", keyAlbum];
     
-    if (error && *error != nil) {
-        return nil;
-    }
+        [fetchRequest setPredicate:predicate];
     
-    if (fetchedObjects.count == 0) {
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:NULL];
+    
+        if (fetchedObjects.count == 0) {
      
-        // create ...
+            // create ...
         
-        result = [NSEntityDescription insertNewObjectForEntityForName:AlbumEntityName
-                                                            inManagedObjectContext:context];
+            result = [NSEntityDescription insertNewObjectForEntityForName:AlbumEntityName
+                                                                inManagedObjectContext:context];
         
-        result.albumId = keyAlbum;
+            result.albumId = keyAlbum;
         
-        if (self.persistantStoreAvailable) {
-            [context save:error];
+            [context save:NULL];
         }
-    }
-    else {
+        else {
         
-        result = fetchedObjects[0];
-    }
+            result = fetchedObjects[0];
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     
     return result;
 }
 
-
 #pragma mark - Delete, Save
 
--(BOOL) save:(NSError **) error {
+-(BOOL) save {
     
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    
-    if (self.persistantStoreAvailable) {
-        return [context save:error];
-    }
-
-    return NO;
-}
-
--(void) deleteObject:(NSManagedObject *) object error:(NSError **) error {
-    
-    NSManagedObjectContext *context = [self managedObjectContext:error];
-    if (error && *error != nil) {
-        return;
+    if (_managedObjectContext == nil) {
+        return NO;
     }
     
-    [context deleteObject:object];
-    [context save:error];
+    __block BOOL result = NO;
+
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        result = [context save:NULL];
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+    return result;
 }
 
+-(void) deleteObject:(NSManagedObject *) object {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+  
+        [context deleteObject:object];
+        [context save:NULL];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
 
-#pragma mark - Core Data stack (before iCloud)
+#pragma mark - Core Data stack (without iCloud)
 
 #ifndef WITH_ICLOUD
 
@@ -465,13 +530,10 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         return nil;
     }
     
-    self.persistantStoreAvailable = YES;
-    
     return _persistentStoreCoordinator;
 }
 
 #endif
-
 
 #pragma mark - Core Data stack (with iCloud)
 
@@ -618,7 +680,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 }
 
 #endif
-
 
 #pragma mark - Core Data stack (simul error)
 

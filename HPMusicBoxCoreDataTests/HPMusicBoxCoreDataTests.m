@@ -57,7 +57,7 @@
     
     NSError *error = nil;
     
-    ArtistEntity *entity = [coredata findOrCreateArtistWithName:name error:&error];
+    ArtistEntity *entity = [coredata findOrCreateArtistWithName:name];
     
     NSLog(@"entity=%@ error=%@", [entity toString], [error localizedDescription]);
     
@@ -77,8 +77,7 @@
     
         NSString *title = [NSString stringWithFormat:@"Playlist n°%d", (i+1)];
         
-        SmartPlaylistEntity *playlist = [coredata createSmartPlaylist:title
-                                                                error:&error];
+        SmartPlaylistEntity *playlist = [coredata createSmartPlaylist:title];
         
         XCTAssertNil(error, @"error: %@", [error localizedDescription]);
         XCTAssertNotNil(playlist, @"%@ not created ???", title);
@@ -86,7 +85,7 @@
         
         for (int j=0; j<NBCRIT; j++) {
             
-            CriteriaPLEntity *criteria = [coredata createCriteria:&error];
+            CriteriaPLEntity *criteria = [coredata createCriteria];
             XCTAssertNil(error, @"error: %@", [error localizedDescription]);
 
             criteria.playlist = playlist;
@@ -105,7 +104,7 @@
         }
     }
     
-    NSArray *playlists = [coredata getSmartPlaylists:&error];
+    NSArray *playlists = [coredata getSmartPlaylists];
     
     XCTAssertNil(error, @"Error=%@", [error localizedDescription]);
     
