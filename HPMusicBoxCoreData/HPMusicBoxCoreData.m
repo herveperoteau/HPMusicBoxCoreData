@@ -521,7 +521,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         [fetchRequest setEntity:entity];
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@", uuid];
-        
         [fetchRequest setPredicate:predicate];
         
         NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
@@ -571,6 +570,76 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return result;
 }
 
+
+-(NSArray *) getListSearchEventsForArtist {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity =[NSEntityDescription entityForName:SearchEventEntityName
+                                                 inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"typeSearch == %d", HPTypeSearchEventByArtist];
+        [fetchRequest setPredicate:predicate];
+        
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
+        [fetchRequest setSortDescriptors:@[sortByTitle]];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:NULL];
+        [tmpResult addObjectsFromArray:fetchedObjects];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return [NSArray arrayWithArray:tmpResult];
+}
+
+-(NSArray *) getListSearchEventsForLocation {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity =[NSEntityDescription entityForName:SearchEventEntityName
+                                                 inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"typeSearch == %d OR typeSearch == %d", HPTypeSearchEventByLocation, HPTypeSearchEventByLocationLimitArtistsLibrary];
+        [fetchRequest setPredicate:predicate];
+        
+        NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
+        [fetchRequest setSortDescriptors:@[sortByTitle]];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:NULL];
+        [tmpResult addObjectsFromArray:fetchedObjects];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return [NSArray arrayWithArray:tmpResult];
+}
 
 #pragma mark - Delete, Save
 

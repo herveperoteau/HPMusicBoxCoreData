@@ -179,6 +179,63 @@
     XCTAssertNil(error, @"error: %@", [error localizedDescription]);
 }
 
+-(void) test_getListSearchEventsForArtist {
+    
+    [self createListsSearchEvents];
+    
+    NSArray *list = [coredata getListSearchEventsForArtist];
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        NSLog(@"%@", [obj toString]);
+    }];
+    
+}
+
+-(void) test_getListSearchEventsForLocation {
+
+    [self createListsSearchEvents];
+    
+    NSArray *list = [coredata getListSearchEventsForLocation];
+    
+    [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        
+        NSLog(@"%@", [obj toString]);
+    }];
+}
+
+-(void) createListsSearchEvents {
+    
+    [coredata createSearchEventsWithTitle:@"Paris"
+                            AndTypeSearch:HPTypeSearchEventByLocation];
+        
+    [coredata createSearchEventsWithTitle:@"Bordeaux"
+                            AndTypeSearch:HPTypeSearchEventByLocation];
+    
+    [coredata createSearchEventsWithTitle:@"Toulouse"
+                            AndTypeSearch:HPTypeSearchEventByLocationLimitArtistsLibrary];
+    
+    [coredata createSearchEventsWithTitle:@"Marseille"
+                            AndTypeSearch:HPTypeSearchEventByLocationLimitArtistsLibrary];
+    
+    [coredata createSearchEventsWithTitle:@"Lyon"
+                            AndTypeSearch:HPTypeSearchEventByLocation];
+
+    [coredata createSearchEventsWithTitle:@"Indochine"
+                            AndTypeSearch:HPTypeSearchEventByArtist];
+    
+    [coredata createSearchEventsWithTitle:@"The strokes"
+                            AndTypeSearch:HPTypeSearchEventByArtist];
+    
+    [coredata createSearchEventsWithTitle:@"MGMT"
+                            AndTypeSearch:HPTypeSearchEventByArtist];
+    
+    [coredata createSearchEventsWithTitle:@"Skip the use"
+                            AndTypeSearch:HPTypeSearchEventByArtist];
+    
+    [coredata createSearchEventsWithTitle:@"Rihanna"
+                            AndTypeSearch:HPTypeSearchEventByArtist];
+}
 
 //-(NSArray *) getSmartPlaylists;
 //

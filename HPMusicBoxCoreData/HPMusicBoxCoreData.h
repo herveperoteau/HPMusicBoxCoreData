@@ -84,6 +84,9 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 -(SearchEventEntity *) findSearchEventsByUUID:(NSString *)uuid;
 -(SearchEventEntity *) createSearchEventsWithTitle:(NSString *)title AndTypeSearch:(HPTypeSearchEvent)typeSearch;
 
+-(NSArray *) getListSearchEventsForArtist;
+-(NSArray *) getListSearchEventsForLocation;
+
 #pragma mark - Delete, Save
 
 -(void) deleteObject:(NSManagedObject *) object;
