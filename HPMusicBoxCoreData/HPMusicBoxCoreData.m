@@ -17,6 +17,7 @@
 
 #define AlbumEntityName @"AlbumEntity"
 #define ArtistEntityName @"ArtistEntity"
+#define EventEntityName @"EventEntity"
 #define CriteriaPLEntityName @"CriteriaPLEntity"
 #define SmartPlaylistEntityName @"SmartPlaylistEntity"
 #define ErrorDomain @"HPMusicBoxCoreData"
@@ -132,7 +133,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     [queue addOperationWithBlock:^{
         
-        NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
+        NSString *cleanName = [self cleanNameArtist:fullName];
 
         NSManagedObjectContext *context = _managedObjectContext;
 
@@ -154,6 +155,12 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return result;
 }
 
+-(NSString *) cleanNameArtist:(NSString *)artist {
+    
+    NSString *cleanName = [HPMusicHelper cleanArtistName:artist PreserveAccent:NO PreservePrefix:NO];
+    return cleanName;
+}
+
 -(ArtistEntity *) findArtistWithName:(NSString *) fullName {
     
     NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
@@ -164,7 +171,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
     [queue addOperationWithBlock:^{
         
-        NSString *cleanName = [HPMusicHelper cleanArtistName:fullName];
+        NSString *cleanName = [self cleanNameArtist:fullName];
         
         NSManagedObjectContext *context = _managedObjectContext;
         
@@ -424,6 +431,76 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return result;
 }
 
+#pragma mark - Events
+
+-(EventEntity *) findEventByEventID:(NSString *)eventId {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block EventEntity *result = nil;
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity = [NSEntityDescription entityForName:EventEntityName
+                                                  inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"eventId == %@", eventId];
+        
+        [fetchRequest setPredicate:predicate];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                         error:NULL];
+        
+        if (fetchedObjects.count > 0) {
+            
+            result = fetchedObjects[0];
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
+}
+
+-(EventEntity *) createEventWithEventID:(NSString *)eventId {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block EventEntity *result = nil;
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        EventEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:EventEntityName
+                                                            inManagedObjectContext:context];
+        
+        entity.eventId = eventId;
+        
+        result = entity;
+                
+        [context save:NULL];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
+}
+
+
 #pragma mark - Delete, Save
 
 -(BOOL) save {
@@ -515,7 +592,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"MusicBox.sqlite"];
+    NSURL *storeURL = [self.documentsURL URLByAppendingPathComponent:@"Everzik_V2.sqlite"];
     
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel:error]];
     

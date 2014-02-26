@@ -12,6 +12,8 @@
 #import "ArtistEntity+Helper.h"
 #import "CriteriaPLEntity.h"
 #import "SmartPlaylistEntity+Helper.h"
+#import "EventEntity.h"
+#import "EventEntity+Helper.h"
 
 @interface HPMusicBoxCoreDataTests : XCTestCase
 
@@ -123,6 +125,31 @@
         XCTAssertTrue(equals, @"Bad count %d criterias on pl %@ ???", NBCRIT, playlist.title);
     }
 }
+
+- (void)testEvents
+{
+    NSError *error = nil;
+    
+    NSString *eventID = @"TEST1";
+    
+    EventEntity *entity = [coredata findEventByEventID:eventID];
+    
+    if (entity == nil) {
+        
+        entity = [coredata createEventWithEventID:eventID];
+        
+        entity.title = @"Les vieilles charrues";
+        entity.artistHeadliner = @"indochine";
+        entity.artists = @"indochine, MGMT, Les strokes, Skip the use";
+    }
+    
+    NSLog(@"entity=%@ error=%@", [entity toString], [error localizedDescription]);
+    
+    XCTAssertNotNil(entity, @"EventID %@ Not exist and not created ???", eventID);
+    XCTAssertEqualObjects(entity.eventId, eventID, @"Bad value in cleanName field");
+    XCTAssertNil(error, @"error: %@", [error localizedDescription]);
+}
+
 
 //-(NSArray *) getSmartPlaylists;
 //

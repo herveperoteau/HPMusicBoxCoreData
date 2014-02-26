@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3400" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AlbumEntity" representedClassName="AlbumEntity" syncable="YES">
         <attribute name="albumId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="artist" optional="YES" attributeType="String" syncable="YES"/>
@@ -24,6 +24,28 @@
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="playlist" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SmartPlaylistEntity" inverseName="criterias" inverseEntity="SmartPlaylistEntity" syncable="YES"/>
     </entity>
+    <entity name="EventEntity" representedClassName="EventEntity" syncable="YES">
+        <attribute name="artistHeadliner" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="artists" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="city" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="country" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dateEnd" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="dateStart" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="descriptionEvent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="eventId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flagCancelled" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="gpsLat" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="gpsLong" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="statusAlert" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="statusRead" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="tags" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="urlImageEvent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="urlImageVenue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="webSite" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="PLBaseEntity" representedClassName="PLBaseEntity" isAbstract="YES" syncable="YES">
         <attribute name="count" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="dateCreate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -39,6 +61,7 @@
         <element name="AlbumEntity" positionX="0" positionY="0" width="0" height="0"/>
         <element name="ArtistEntity" positionX="0" positionY="0" width="0" height="0"/>
         <element name="CriteriaPLEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="EventEntity" positionX="0" positionY="0" width="0" height="0"/>
         <element name="PLBaseEntity" positionX="0" positionY="0" width="0" height="0"/>
         <element name="SmartPlaylistEntity" positionX="0" positionY="0" width="0" height="0"/>
     </elements>

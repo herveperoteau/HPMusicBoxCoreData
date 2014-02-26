@@ -11,6 +11,8 @@
 #import "SmartPlaylistEntity.h"
 #import "CriteriaPLEntity.h"
 #import "AlbumEntity.h"
+#import "EventEntity.h"
+
 
 #define ERROR_ALREADY_EXIST 1001
 
@@ -62,6 +64,12 @@
 -(NSArray *) getAlbumsEntities;
 
 -(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum;
+
+
+#pragma mark - Events
+
+-(EventEntity *) findEventByEventID:(NSString *)eventId;
+-(EventEntity *) createEventWithEventID:(NSString *)eventId;
 
 
 #pragma mark - Delete, Save
