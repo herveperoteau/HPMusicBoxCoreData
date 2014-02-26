@@ -12,7 +12,7 @@
 #import "CriteriaPLEntity.h"
 #import "AlbumEntity.h"
 #import "EventEntity.h"
-
+#import "SearchEventEntity.h"
 
 #define ERROR_ALREADY_EXIST 1001
 
@@ -21,6 +21,16 @@
 #define ICLOUD_FOLDER_UPDATE @"musicboxdata"
 
 #define NOTIFICATION_MUSICBOX_COREDATA_ICLOUD_REFRESH @"com.peroteau.herve.musicBox.coredata.icloud.refresh"
+
+
+typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
+    
+    HPTypeSearchEventUnknown,
+    HPTypeSearchEventByLocation,
+    HPTypeSearchEventByLocationLimitArtistsLibrary,
+    HPTypeSearchEventByArtist
+};
+
 
 @interface HPMusicBoxCoreData : NSObject
 
@@ -71,6 +81,8 @@
 -(EventEntity *) findEventByEventID:(NSString *)eventId;
 -(EventEntity *) createEventWithEventID:(NSString *)eventId;
 
+-(SearchEventEntity *) findSearchEventsByUUID:(NSString *)uuid;
+-(SearchEventEntity *) createSearchEventsWithTitle:(NSString *)title AndTypeSearch:(HPTypeSearchEvent)typeSearch;
 
 #pragma mark - Delete, Save
 

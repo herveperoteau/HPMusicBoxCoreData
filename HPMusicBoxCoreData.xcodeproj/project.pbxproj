@@ -36,13 +36,15 @@
 		09A9934317B0B9D8006C4552 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9934217B0B9D8006C4552 /* ArtistEntity.m */; };
 		09A9934417B0B9D8006C4552 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9934217B0B9D8006C4552 /* ArtistEntity.m */; };
 		09F33F5918BDF7A3001E6AC6 /* EventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F5818BDF7A3001E6AC6 /* EventEntity+Helper.m */; };
-		09F33F5C18BDF936001E6AC6 /* EventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F5B18BDF936001E6AC6 /* EventEntity.m */; };
 		09F33F6218BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6018BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld */; };
 		09F33F6318BE0279001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6018BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld */; };
-		09F33F6418BE0342001E6AC6 /* EventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F5B18BDF936001E6AC6 /* EventEntity.m */; };
 		09F33F6518BE0348001E6AC6 /* AlbumEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A8AD50181E38FE00577DD5 /* AlbumEntity.m */; };
 		09F33F6618BE0383001E6AC6 /* EventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F5818BDF7A3001E6AC6 /* EventEntity+Helper.m */; };
 		09F33F6718BE038A001E6AC6 /* AlbumEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */; };
+		09F33F6A18BE2676001E6AC6 /* EventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6918BE2676001E6AC6 /* EventEntity.m */; };
+		09F33F7018BE283C001E6AC6 /* SearchEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6F18BE283C001E6AC6 /* SearchEventEntity.m */; };
+		09F33F7318BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F7218BE2870001E6AC6 /* SearchEventEntity+Helper.m */; };
+		09F33F7418BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F7218BE2870001E6AC6 /* SearchEventEntity+Helper.m */; };
 		6A4BC8825838420584210BC8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 980C1F10487F453DA963B0F9 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -106,9 +108,13 @@
 		09A9934217B0B9D8006C4552 /* ArtistEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistEntity.m; sourceTree = "<group>"; };
 		09F33F5718BDF7A3001E6AC6 /* EventEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EventEntity+Helper.h"; sourceTree = "<group>"; };
 		09F33F5818BDF7A3001E6AC6 /* EventEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EventEntity+Helper.m"; sourceTree = "<group>"; };
-		09F33F5A18BDF936001E6AC6 /* EventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEntity.h; sourceTree = "<group>"; };
-		09F33F5B18BDF936001E6AC6 /* EventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEntity.m; sourceTree = "<group>"; };
 		09F33F6118BE021F001E6AC6 /* MusicBoxModel-v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicBoxModel-v2.xcdatamodel"; sourceTree = "<group>"; };
+		09F33F6818BE2676001E6AC6 /* EventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEntity.h; sourceTree = "<group>"; };
+		09F33F6918BE2676001E6AC6 /* EventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEntity.m; sourceTree = "<group>"; };
+		09F33F6E18BE283C001E6AC6 /* SearchEventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchEventEntity.h; sourceTree = "<group>"; };
+		09F33F6F18BE283C001E6AC6 /* SearchEventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchEventEntity.m; sourceTree = "<group>"; };
+		09F33F7118BE2870001E6AC6 /* SearchEventEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SearchEventEntity+Helper.h"; sourceTree = "<group>"; };
+		09F33F7218BE2870001E6AC6 /* SearchEventEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "SearchEventEntity+Helper.m"; sourceTree = "<group>"; };
 		7E8F1434222146CFB61E5787 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		980C1F10487F453DA963B0F9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -178,7 +184,6 @@
 		09377CCC179CFE3F00CCABF0 /* HPMusicBoxCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				09F33F6018BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld */,
 				090FDAEE1807C2B600635B6C /* AlbumEntity+Helper.h */,
 				090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */,
 				098E485017AF7154001E0FCB /* ArtistEntity+Helper.h */,
@@ -191,6 +196,9 @@
 				09377CCF179CFE3F00CCABF0 /* HPMusicBoxCoreData.h */,
 				09377CD1179CFE3F00CCABF0 /* HPMusicBoxCoreData.m */,
 				09377CF8179E4BD200CCABF0 /* HPMusicBoxCoreData_Private.h */,
+				09F33F6018BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld */,
+				09F33F7118BE2870001E6AC6 /* SearchEventEntity+Helper.h */,
+				09F33F7218BE2870001E6AC6 /* SearchEventEntity+Helper.m */,
 				098E488917AF755D001E0FCB /* SmartPlaylistEntity+Helper.h */,
 				098E488A17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m */,
 				09377CCD179CFE3F00CCABF0 /* Supporting Files */,
@@ -227,16 +235,18 @@
 		098E487817AF745F001E0FCB /* generated */ = {
 			isa = PBXGroup;
 			children = (
-				09F33F5A18BDF936001E6AC6 /* EventEntity.h */,
-				09F33F5B18BDF936001E6AC6 /* EventEntity.m */,
 				09A8AD4F181E38FE00577DD5 /* AlbumEntity.h */,
 				09A8AD50181E38FE00577DD5 /* AlbumEntity.m */,
 				09A9934117B0B9D8006C4552 /* ArtistEntity.h */,
 				09A9934217B0B9D8006C4552 /* ArtistEntity.m */,
 				09A9933D17B0B9D8006C4552 /* CriteriaPLEntity.h */,
 				09A9933E17B0B9D8006C4552 /* CriteriaPLEntity.m */,
+				09F33F6818BE2676001E6AC6 /* EventEntity.h */,
+				09F33F6918BE2676001E6AC6 /* EventEntity.m */,
 				09A9933917B0B9D8006C4552 /* PLBaseEntity.h */,
 				09A9933A17B0B9D8006C4552 /* PLBaseEntity.m */,
+				09F33F6E18BE283C001E6AC6 /* SearchEventEntity.h */,
+				09F33F6F18BE283C001E6AC6 /* SearchEventEntity.m */,
 				09A9933517B0B9D7006C4552 /* SmartPlaylistEntity.h */,
 				09A9933617B0B9D7006C4552 /* SmartPlaylistEntity.m */,
 			);
@@ -360,10 +370,12 @@
 				09377CD2179CFE3F00CCABF0 /* HPMusicBoxCoreData.m in Sources */,
 				09A9934317B0B9D8006C4552 /* ArtistEntity.m in Sources */,
 				09F33F5918BDF7A3001E6AC6 /* EventEntity+Helper.m in Sources */,
+				09F33F7018BE283C001E6AC6 /* SearchEventEntity.m in Sources */,
 				09A9933B17B0B9D8006C4552 /* PLBaseEntity.m in Sources */,
 				098E485617AF72DC001E0FCB /* CriteriaPLEntity+Helper.m in Sources */,
-				09F33F5C18BDF936001E6AC6 /* EventEntity.m in Sources */,
 				098E488B17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m in Sources */,
+				09F33F6A18BE2676001E6AC6 /* EventEntity.m in Sources */,
+				09F33F7318BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */,
 				09A9933F17B0B9D8006C4552 /* CriteriaPLEntity.m in Sources */,
 				09F33F6218BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */,
 				09A9933717B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */,
@@ -380,6 +392,7 @@
 				09377CE7179CFE3F00CCABF0 /* HPMusicBoxCoreDataTests.m in Sources */,
 				09A9934417B0B9D8006C4552 /* ArtistEntity.m in Sources */,
 				09F33F6718BE038A001E6AC6 /* AlbumEntity+Helper.m in Sources */,
+				09F33F7418BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */,
 				09A9933C17B0B9D8006C4552 /* PLBaseEntity.m in Sources */,
 				098E485717AF72DC001E0FCB /* CriteriaPLEntity+Helper.m in Sources */,
 				098E488C17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m in Sources */,
@@ -388,7 +401,6 @@
 				09A9933817B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */,
 				09F33F6318BE0279001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */,
 				098E485317AF7154001E0FCB /* ArtistEntity+Helper.m in Sources */,
-				09F33F6418BE0342001E6AC6 /* EventEntity.m in Sources */,
 				09F33F6518BE0348001E6AC6 /* AlbumEntity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

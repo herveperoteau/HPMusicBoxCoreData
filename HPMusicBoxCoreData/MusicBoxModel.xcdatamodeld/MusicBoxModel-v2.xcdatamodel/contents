@@ -34,8 +34,8 @@
         <attribute name="descriptionEvent" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="eventId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="flagCancelled" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="gpsLat" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="gpsLong" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="gpsLat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="gpsLong" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="locationName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="statusAlert" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -53,6 +53,18 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="SearchEventEntity" representedClassName="SearchEventEntity" syncable="YES">
+        <attribute name="count" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="countNotRead" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="dateUpdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="gpsLat" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="gpsLong" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="typeSearch" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="SmartPlaylistEntity" representedClassName="SmartPlaylistEntity" parentEntity="PLBaseEntity" syncable="YES">
         <attribute name="flagCriteriasAND" optional="YES" attributeType="Boolean" defaultValueString="0" syncable="YES"/>
         <relationship name="criterias" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="CriteriaPLEntity" inverseName="playlist" inverseEntity="CriteriaPLEntity" syncable="YES"/>
@@ -64,5 +76,6 @@
         <element name="EventEntity" positionX="0" positionY="0" width="0" height="0"/>
         <element name="PLBaseEntity" positionX="0" positionY="0" width="0" height="0"/>
         <element name="SmartPlaylistEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="SearchEventEntity" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

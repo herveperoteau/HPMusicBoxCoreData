@@ -18,6 +18,7 @@
 #define AlbumEntityName @"AlbumEntity"
 #define ArtistEntityName @"ArtistEntity"
 #define EventEntityName @"EventEntity"
+#define SearchEventEntityName @"SearchEventEntity"
 #define CriteriaPLEntityName @"CriteriaPLEntity"
 #define SmartPlaylistEntityName @"SmartPlaylistEntity"
 #define ErrorDomain @"HPMusicBoxCoreData"
@@ -490,6 +491,76 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         result = entity;
                 
+        [context save:NULL];
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
+}
+
+
+-(SearchEventEntity *) findSearchEventsByUUID:(NSString *)uuid {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block SearchEventEntity *result = nil;
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity = [NSEntityDescription entityForName:SearchEventEntityName
+                                                  inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@", uuid];
+        
+        [fetchRequest setPredicate:predicate];
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                         error:NULL];
+        
+        if (fetchedObjects.count > 0) {
+            
+            result = fetchedObjects[0];
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    
+    return result;
+}
+
+-(SearchEventEntity *) createSearchEventsWithTitle:(NSString *)title AndTypeSearch:(HPTypeSearchEvent)typeSearch {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    
+    __block SearchEventEntity *result = nil;
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        SearchEventEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:SearchEventEntityName
+                                                            inManagedObjectContext:context];
+        
+        entity.uuid = [[NSUUID UUID] UUIDString];
+        entity.title = title;
+        entity.typeSearch = [NSNumber numberWithInteger:typeSearch];
+        
+        result = entity;
+        
         [context save:NULL];
         
         dispatch_semaphore_signal(semaphore);

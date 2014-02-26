@@ -14,6 +14,8 @@
 #import "SmartPlaylistEntity+Helper.h"
 #import "EventEntity.h"
 #import "EventEntity+Helper.h"
+#import "SearchEventEntity+Helper.h"
+
 
 @interface HPMusicBoxCoreDataTests : XCTestCase
 
@@ -146,7 +148,34 @@
     NSLog(@"entity=%@ error=%@", [entity toString], [error localizedDescription]);
     
     XCTAssertNotNil(entity, @"EventID %@ Not exist and not created ???", eventID);
-    XCTAssertEqualObjects(entity.eventId, eventID, @"Bad value in cleanName field");
+    XCTAssertEqualObjects(entity.eventId, eventID, @"Bad value in eventId field");
+    XCTAssertNil(error, @"error: %@", [error localizedDescription]);
+}
+
+
+- (void)testSearchEvents
+{
+    NSError *error = nil;
+    
+    NSString *title = @"TEST SEARCH";
+    HPTypeSearchEvent typeSearch = HPTypeSearchEventByLocation;
+    
+    SearchEventEntity *entity = [coredata findSearchEventsByUUID:@"123"];
+    
+    if (entity == nil) {
+        
+        entity = [coredata createSearchEventsWithTitle:title
+                                         AndTypeSearch:typeSearch];
+        
+        entity.gpsLat = [NSNumber numberWithDouble:10.101010];
+        entity.gpsLong = [NSNumber numberWithDouble:10.121212];
+        entity.distance = [NSNumber numberWithDouble:10];
+    }
+    
+    NSLog(@"entity=%@ error=%@", [entity toString], [error localizedDescription]);
+    
+    XCTAssertNotNil(entity, @"SearchEvents %@ Not exist and not created ???", title);
+    XCTAssertEqualObjects(entity.title, title, @"Bad value in title field");
     XCTAssertNil(error, @"error: %@", [error localizedDescription]);
 }
 
