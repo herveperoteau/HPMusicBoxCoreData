@@ -87,15 +87,11 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 -(NSArray *) getListSearchEventsForArtist;
 -(NSArray *) getListSearchEventsForLocation;
 
-#pragma mark - Delete, Save
+#pragma mark - Update, Delete, Save
 
+-(void) addSyncOperationWithBlock:(void (^)(void))block;
+-(void) addOperationWithBlock:(void (^)(void))block Completion:(void (^)(void))completion;
 -(void) deleteObject:(NSManagedObject *) object;
-
-/**
- * Save all modifications in DataBase
- * You need call this method when your application ended or switch in background mode
- */
 -(BOOL) save;
-
 
 @end

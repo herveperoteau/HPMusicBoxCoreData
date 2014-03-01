@@ -643,6 +643,29 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 #pragma mark - Delete, Save
 
+-(void) addSyncOperationWithBlock:(void (^)(void))block {
+    
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+    [self addOperationWithBlock:block
+                     Completion:^{
+                         dispatch_semaphore_signal(semaphore);
+                     }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)addOperationWithBlock:(void (^)(void))block Completion:(void (^)(void))completion {
+    
+    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:block];
+
+    if (completion) {
+        [operation setCompletionBlock:completion];
+    }
+    
+    [queue addOperation:operation];
+}
+
 -(BOOL) save {
     
     if (_managedObjectContext == nil) {
@@ -650,17 +673,12 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     }
     
     __block BOOL result = NO;
+    __block NSManagedObjectContext *context = _managedObjectContext;
 
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    
-    [queue addOperationWithBlock:^{
+    [self addSyncOperationWithBlock:^{
         
-        NSManagedObjectContext *context = _managedObjectContext;
         result = [context save:NULL];
-        dispatch_semaphore_signal(semaphore);
     }];
-    
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 
     return result;
 }
@@ -669,19 +687,13 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
     
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block NSManagedObjectContext *context = _managedObjectContext;
     
-    [queue addOperationWithBlock:^{
+    [self addSyncOperationWithBlock:^{
         
-        NSManagedObjectContext *context = _managedObjectContext;
-  
         [context deleteObject:object];
         [context save:NULL];
-        
-        dispatch_semaphore_signal(semaphore);
     }];
-    
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 }
 
 #pragma mark - Core Data stack (without iCloud)

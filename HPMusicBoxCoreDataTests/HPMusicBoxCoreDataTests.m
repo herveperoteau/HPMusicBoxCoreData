@@ -167,9 +167,12 @@
         entity = [coredata createSearchEventsWithTitle:title
                                          AndTypeSearch:typeSearch];
         
-        entity.gpsLat = [NSNumber numberWithDouble:10.101010];
-        entity.gpsLong = [NSNumber numberWithDouble:10.121212];
-        entity.distance = [NSNumber numberWithDouble:10];
+        [coredata addSyncOperationWithBlock:^{
+            
+            entity.gpsLat = [NSNumber numberWithDouble:10.101010];
+            entity.gpsLong = [NSNumber numberWithDouble:10.121212];
+            entity.distance = [NSNumber numberWithDouble:10];
+        }];
     }
     
     NSLog(@"entity=%@ error=%@", [entity toString], [error localizedDescription]);
