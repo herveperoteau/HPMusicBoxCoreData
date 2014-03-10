@@ -571,8 +571,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 }
 
 
--(NSArray *) getListSearchEventsForArtist {
-    
+-(NSArray *) getListSearchEventsForArtist:(BOOL)onlyWithEvents {
+        
     NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
     
     __block NSMutableArray *tmpResult = [[NSMutableArray alloc] init];
@@ -589,7 +589,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                                                  inManagedObjectContext:context];
         [fetchRequest setEntity:entity];
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"typeSearch == %d", HPTypeSearchEventByArtist];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"typeSearch == %d && count >= %d", HPTypeSearchEventByArtist, (onlyWithEvents ? 1 : 0)];
+        
         [fetchRequest setPredicate:predicate];
         
         NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
