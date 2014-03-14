@@ -186,7 +186,7 @@
     
     [self createListsSearchEvents];
     
-    NSArray *list = [coredata getListSearchEventsForArtist];
+    NSArray *list = [coredata getListSearchEventsForArtist:NO];
     
     [list enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         

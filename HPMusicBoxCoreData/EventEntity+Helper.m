@@ -26,4 +26,29 @@
 }
 
 
+-(EventStatusOfRead) statusOfRead {
+    
+    NSNumber *number = self.statusRead;
+    
+    if (number == nil) {
+        return EventStatusNotRead;
+    }
+    
+    switch ([number integerValue]) {
+            
+        case EventStatusNotRead :
+        case EventStatusNotReadAfterModification :
+        case EventStatusRead :
+            return [number integerValue];
+    }
+
+    NSLog(@"%@.statusOfRead : BAD VALUE ???", self.class);
+    return EventStatusNotRead;
+}
+
+-(void) setStatusOfRead:(EventStatusOfRead)status {
+    
+    self.statusRead = [NSNumber numberWithInteger:status];
+}
+
 @end
