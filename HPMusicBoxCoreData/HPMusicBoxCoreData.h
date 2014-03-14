@@ -34,6 +34,8 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 
 @interface HPMusicBoxCoreData : NSObject
 
+@property (nonatomic, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
 /**
  Directory where database is store
  By default, database is store at [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
@@ -79,7 +81,10 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 #pragma mark - Events
 
 -(EventEntity *) findEventByEventID:(NSString *)eventId;
+-(EventEntity *) findEventByEventID:(NSString *)eventId inContext:(NSManagedObjectContext *)context;
+
 -(EventEntity *) createEventWithEventID:(NSString *)eventId;
+-(EventEntity *) createEventWithEventID:(NSString *)eventId inContext:(NSManagedObjectContext *)context;
 
 -(SearchEventEntity *) findSearchEventsByUUID:(NSString *)uuid;
 -(SearchEventEntity *) createSearchEventsWithTitle:(NSString *)title AndTypeSearch:(HPTypeSearchEvent)typeSearch;

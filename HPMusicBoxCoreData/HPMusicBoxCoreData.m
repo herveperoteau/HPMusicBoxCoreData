@@ -444,26 +444,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     [queue addOperationWithBlock:^{
         
-        NSManagedObjectContext *context = _managedObjectContext;
-        
-        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-        
-        NSEntityDescription *entity = [NSEntityDescription entityForName:EventEntityName
-                                                  inManagedObjectContext:context];
-        [fetchRequest setEntity:entity];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"eventId == %@", eventId];
-        
-        [fetchRequest setPredicate:predicate];
-        
-        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
-                                                         error:NULL];
-        
-        if (fetchedObjects.count > 0) {
-            
-            result = fetchedObjects[0];
-        }
-        
+        result = [self findEventByEventID:eventId inContext:_managedObjectContext];
         dispatch_semaphore_signal(semaphore);
     }];
     
@@ -471,6 +452,36 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     return result;
 }
+
+-(EventEntity *) findEventByEventID:(NSString *)eventId inContext:(NSManagedObjectContext *)context {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    NSAssert(context!=nil, @"context is nil !");
+    
+    EventEntity *result = nil;
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+    NSEntityDescription *entity = [NSEntityDescription entityForName:EventEntityName
+                                                  inManagedObjectContext:context];
+    [fetchRequest setEntity:entity];
+        
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"eventId == %@", eventId];
+        
+    [fetchRequest setPredicate:predicate];
+        
+    NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest
+                                                     error:NULL];
+        
+    if (fetchedObjects.count > 0) {
+            
+        result = fetchedObjects[0];
+    }
+    
+    return result;
+}
+
+
 
 -(EventEntity *) createEventWithEventID:(NSString *)eventId {
     
@@ -482,22 +493,32 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     [queue addOperationWithBlock:^{
         
-        NSManagedObjectContext *context = _managedObjectContext;
-        
-        EventEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:EventEntityName
-                                                            inManagedObjectContext:context];
-        
-        entity.eventId = eventId;
-        
-        result = entity;
-                
-        [context save:NULL];
+        result = [self createEventWithEventID:eventId inContext:_managedObjectContext];
+
+        [_managedObjectContext save:NULL];
         
         dispatch_semaphore_signal(semaphore);
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
     
+    return result;
+}
+
+-(EventEntity *) createEventWithEventID:(NSString *)eventId inContext:(NSManagedObjectContext *)context {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+    NSAssert(context!=nil, @"context is nil !");
+
+    EventEntity *result = nil;
+    
+    EventEntity *entity = [NSEntityDescription insertNewObjectForEntityForName:EventEntityName
+                                                        inManagedObjectContext:context];
+        
+    entity.eventId = eventId;
+        
+    result = entity;
+        
     return result;
 }
 
