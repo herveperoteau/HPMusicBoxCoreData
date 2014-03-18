@@ -92,6 +92,11 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 -(NSArray *) getListSearchEventsForArtist:(BOOL)onlyWithEvents;
 -(NSArray *) getListSearchEventsForLocation;
 
+#pragma mark - FetchRequest for use in other context
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            InContext:(NSManagedObjectContext *) context;
+
 #pragma mark - Update, Delete, Save
 
 -(void) addSyncOperationWithBlock:(void (^)(void))block;

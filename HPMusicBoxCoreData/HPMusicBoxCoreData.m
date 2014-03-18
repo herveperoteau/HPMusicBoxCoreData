@@ -663,6 +663,32 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return [NSArray arrayWithArray:tmpResult];
 }
 
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            InContext:(NSManagedObjectContext *) context {
+
+    NSLog(@"%@.createFetchRequestEventsAfterDate:%@", self.class, date);
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+
+    NSEntityDescription *entity =[NSEntityDescription entityForName:EventEntityName
+                                             inManagedObjectContext:context];
+
+    [fetchRequest setEntity:entity];
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dateStart > %@", date];
+    [fetchRequest setPredicate:predicate];
+
+    NSSortDescriptor *sortByStartDate = [[NSSortDescriptor alloc] initWithKey:@"dateStart" ascending:YES];
+    NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
+    
+    [fetchRequest setSortDescriptors:@[sortByStartDate, sortByTitle]];
+ 
+    [fetchRequest setFetchBatchSize:20];
+    
+    return fetchRequest;
+}
+
+
 #pragma mark - Delete, Save
 
 -(void) addSyncOperationWithBlock:(void (^)(void))block {
