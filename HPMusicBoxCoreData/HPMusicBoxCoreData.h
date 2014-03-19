@@ -97,6 +97,10 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             InContext:(NSManagedObjectContext *) context;
 
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForArtist:(NSString *) artist
+                                            InContext:(NSManagedObjectContext *) context;
+
 #pragma mark - Update, Delete, Save
 
 -(void) addSyncOperationWithBlock:(void (^)(void))block;

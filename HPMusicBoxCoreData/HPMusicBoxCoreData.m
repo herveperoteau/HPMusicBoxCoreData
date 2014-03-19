@@ -666,7 +666,16 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             InContext:(NSManagedObjectContext *) context {
 
-    NSLog(@"%@.createFetchRequestEventsAfterDate:%@", self.class, date);
+    return [self createFetchRequestEventsAfterDate:date
+                                         ForArtist:nil
+                                         InContext:context];
+}
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForArtist:(NSString *) artist
+                                            InContext:(NSManagedObjectContext *) context {
+
+    NSLog(@"%@.createFetchRequestEventsAfterDate:%@ ForArtist:%@ ...", self.class, date, artist);
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 
@@ -675,9 +684,22 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
     [fetchRequest setEntity:entity];
 
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"dateStart > %@", date];
-    [fetchRequest setPredicate:predicate];
+    NSMutableArray *predicates = [NSMutableArray array];
 
+    if (date) {
+        [predicates addObject:[NSPredicate predicateWithFormat:@"dateStart > %@", date]];
+    }
+
+    if (artist.length>0) {
+        [predicates addObject:[NSPredicate predicateWithFormat:@"artists CONTAINS[cd] %@", artist]];
+    }
+
+    if (predicates.count>0) {
+        NSPredicate *predicatesCompound = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+        NSLog(@"Predicates=%@", predicatesCompound);
+        [fetchRequest setPredicate:predicatesCompound];
+    }
+    
     NSSortDescriptor *sortByStartDate = [[NSSortDescriptor alloc] initWithKey:@"dateStart" ascending:YES];
     NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
     
