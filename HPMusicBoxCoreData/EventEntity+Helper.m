@@ -51,4 +51,15 @@
     self.statusRead = [NSNumber numberWithInteger:status];
 }
 
+-(CLLocationCoordinate2D) coordinate2D {
+    
+    CLLocationCoordinate2D result = kCLLocationCoordinate2DInvalid;
+    if (self.gpsLat && self.gpsLong) {
+        result = CLLocationCoordinate2DMake(self.gpsLat.floatValue,
+                                            self.gpsLong.floatValue);
+    }
+    
+    return result;
+}
+
 @end

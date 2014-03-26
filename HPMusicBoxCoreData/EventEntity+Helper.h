@@ -7,6 +7,7 @@
 //
 
 #import "EventEntity.h"
+#import <CoreLocation/CoreLocation.h>
 
 typedef NS_ENUM(NSInteger, EventStatusOfRead) {
     EventStatusNotRead = 0,
@@ -20,5 +21,7 @@ typedef NS_ENUM(NSInteger, EventStatusOfRead) {
 
 -(EventStatusOfRead) statusOfRead;
 -(void) setStatusOfRead:(EventStatusOfRead)status;
+
+-(CLLocationCoordinate2D) coordinate2D;
 
 @end
