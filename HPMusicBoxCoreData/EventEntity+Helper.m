@@ -67,4 +67,9 @@
     return (id<MKAnnotation>) self;
 }
 
+-(NSArray *) artistsArray {
+
+    return [self.artists componentsSeparatedByString:@"+"];
+}
+
 @end
