@@ -69,7 +69,28 @@
 
 -(NSArray *) artistsArray {
 
-    return [self.artists componentsSeparatedByString:@"+"];
+    return [self arrayComponentsString:self.artists SeparatedByString:@"+"];
+}
+
+-(NSArray *) tagsArray {
+    
+    return [self arrayComponentsString:self.tags SeparatedByString:@"+"];
+}
+
+-(NSArray *) arrayComponentsString:(NSString *) str SeparatedByString:(NSString *)separ {
+    
+    NSArray *tmp = [str componentsSeparatedByString:separ];
+    
+    NSMutableArray *result = [[NSMutableArray alloc] init];
+    
+    [tmp enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSString *objStr = (NSString *)obj;
+        if (objStr.length>0) {
+            [result addObject:objStr];
+        }
+    }];
+    
+    return [NSArray arrayWithArray:result];
 }
 
 @end

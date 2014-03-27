@@ -28,5 +28,6 @@ typedef NS_ENUM(NSInteger, EventStatusOfRead) {
 -(id<MKAnnotation>) asMKAnnotation;
 
 -(NSArray *) artistsArray;
+-(NSArray *) tagsArray;
 
 @end

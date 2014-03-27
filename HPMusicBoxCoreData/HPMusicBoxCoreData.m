@@ -711,6 +711,53 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 }
 
 
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForSearch:(NSString *) search
+                                            InContext:(NSManagedObjectContext *) context {
+    
+    NSLog(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ ...", self.class, date, search);
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
+    NSEntityDescription *entity =[NSEntityDescription entityForName:EventEntityName
+                                             inManagedObjectContext:context];
+    
+    [fetchRequest setEntity:entity];
+    
+    NSMutableArray *predicates = [NSMutableArray array];
+    
+    if (date) {
+        [predicates addObject:[NSPredicate predicateWithFormat:@"dateStart > %@", date]];
+    }
+    
+    if (search.length>0) {
+        NSPredicate *searchArtists = [NSPredicate predicateWithFormat:@"artists CONTAINS[cd] %@", search];
+        NSPredicate *searchTitle = [NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", search];
+        NSPredicate *searchCity = [NSPredicate predicateWithFormat:@"city CONTAINS[cd] %@", search];
+//        NSPredicate *searchLocation = [NSPredicate predicateWithFormat:@"location CONTAINS[cd] %@", search];
+        NSPredicate *searchTags = [NSPredicate predicateWithFormat:@"tags CONTAINS[cd] %@", search];
+
+        NSArray *arraySearch = @[searchArtists, searchTitle, searchCity, /*searchLocation,*/ searchTags];
+        NSPredicate *predicatesSearch = [NSCompoundPredicate orPredicateWithSubpredicates:arraySearch];
+        [predicates addObject:predicatesSearch];
+    }
+    
+    if (predicates.count>0) {
+        NSPredicate *predicatesCompound = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+        NSLog(@"Predicates=%@", predicatesCompound);
+        [fetchRequest setPredicate:predicatesCompound];
+    }
+    
+    NSSortDescriptor *sortByStartDate = [[NSSortDescriptor alloc] initWithKey:@"dateStart" ascending:YES];
+    NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
+    
+    [fetchRequest setSortDescriptors:@[sortByStartDate, sortByTitle]];
+    [fetchRequest setFetchBatchSize:20];
+    
+    return fetchRequest;
+}
+
+
 #pragma mark - Delete, Save
 
 -(void) addSyncOperationWithBlock:(void (^)(void))block {
