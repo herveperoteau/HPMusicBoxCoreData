@@ -51,7 +51,7 @@
     self.statusRead = [NSNumber numberWithInteger:status];
 }
 
--(CLLocationCoordinate2D) coordinate2D {
+-(CLLocationCoordinate2D) coordinate {
     
     CLLocationCoordinate2D result = kCLLocationCoordinate2DInvalid;
     if (self.gpsLat && self.gpsLong) {
@@ -60,6 +60,11 @@
     }
     
     return result;
+}
+
+-(id<MKAnnotation>) asMKAnnotation {
+    
+    return (id<MKAnnotation>) self;
 }
 
 @end
