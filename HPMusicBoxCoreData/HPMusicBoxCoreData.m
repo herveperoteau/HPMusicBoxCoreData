@@ -711,12 +711,22 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return fetchRequest;
 }
 
-
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             ForSearch:(NSString *) search
                                             InContext:(NSManagedObjectContext *) context {
     
-    NSLog(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ ...", self.class, date, search);
+    return [self createFetchRequestEventsAfterDate:date
+                                         ForSearch:search
+                                     MaxKilometers:0
+                                         InContext:context];
+}
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForSearch:(NSString *) search
+                                        MaxKilometers:(NSInteger) maxKilometers
+                                            InContext:(NSManagedObjectContext *) context {
+    
+    NSLog(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ MaxKilometers:%d ...", self.class, date, search, maxKilometers);
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -728,22 +738,30 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     NSMutableArray *predicates = [NSMutableArray array];
     
     if (date) {
+        
         [predicates addObject:[NSPredicate predicateWithFormat:@"dateStart > %@", date]];
     }
     
     if (search.length>0) {
+        
         NSPredicate *searchArtists = [NSPredicate predicateWithFormat:@"artists CONTAINS[cd] %@", search];
         NSPredicate *searchTitle = [NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", search];
         NSPredicate *searchCity = [NSPredicate predicateWithFormat:@"city CONTAINS[cd] %@", search];
-//        NSPredicate *searchLocation = [NSPredicate predicateWithFormat:@"location CONTAINS[cd] %@", search];
+        //        NSPredicate *searchLocation = [NSPredicate predicateWithFormat:@"location CONTAINS[cd] %@", search];
         NSPredicate *searchTags = [NSPredicate predicateWithFormat:@"tags CONTAINS[cd] %@", search];
-
+        
         NSArray *arraySearch = @[searchArtists, searchTitle, searchCity, /*searchLocation,*/ searchTags];
         NSPredicate *predicatesSearch = [NSCompoundPredicate orPredicateWithSubpredicates:arraySearch];
         [predicates addObject:predicatesSearch];
     }
     
+    if (maxKilometers > 0) {
+        
+        [predicates addObject:[NSPredicate predicateWithFormat:@"(distance!=nil && distance <= %d)", maxKilometers * 1000]];
+    }
+    
     if (predicates.count>0) {
+        
         NSPredicate *predicatesCompound = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
         NSLog(@"Predicates=%@", predicatesCompound);
         [fetchRequest setPredicate:predicatesCompound];
@@ -751,12 +769,13 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     NSSortDescriptor *sortByStartDate = [[NSSortDescriptor alloc] initWithKey:@"dateStart" ascending:YES];
     NSSortDescriptor *sortByTitle = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:NO];
-    
     [fetchRequest setSortDescriptors:@[sortByStartDate, sortByTitle]];
+    
     [fetchRequest setFetchBatchSize:20];
     
     return fetchRequest;
 }
+
 
 -(void) updateDistanceEventWithLocation:(CLLocation *)location
                              Completion:(void (^)(BOOL success, NSError *error))completion {

@@ -108,6 +108,11 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
                                             ForSearch:(NSString *) search
                                             InContext:(NSManagedObjectContext *) context;
 
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForSearch:(NSString *) search
+                                        MaxKilometers:(NSInteger) maxKilometers
+                                            InContext:(NSManagedObjectContext *) context;
+
 #pragma mark - Update, Delete, Save
 
 -(void) addSyncOperationWithBlock:(void (^)(void))block;
