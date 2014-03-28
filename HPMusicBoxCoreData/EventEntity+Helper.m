@@ -97,16 +97,16 @@
     
     if (self.gpsLat == nil) {
         
-        self.distance = [NSNumber numberWithFloat:kDistanceUnknown];
+        self.distance = [NSNumber numberWithDouble:kDistanceUnknown];
     }
     else {
     
         CLLocation *locationEvent = [[CLLocation alloc] initWithLatitude:self.gpsLat.floatValue
                                                                longitude:self.gpsLong.floatValue];
     
-        float distInMeter = [locationEvent distanceFromLocation:location];
+        CLLocationDistance distInMeter = [locationEvent distanceFromLocation:location];
     
-        self.distance = [NSNumber numberWithFloat:distInMeter];
+        self.distance = [NSNumber numberWithDouble:distInMeter];
     }
 
     NSLog(@"%@.updateDistanceWithMe Event:%@ Distance=%@ (meters)", self.class, self.title, self.distance);
