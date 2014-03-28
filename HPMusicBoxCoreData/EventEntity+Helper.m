@@ -93,4 +93,23 @@
     return [NSArray arrayWithArray:result];
 }
 
+-(void) updateDistanceWithMe:(CLLocation *) location {
+    
+    if (self.gpsLat == nil) {
+        
+        self.distance = [NSNumber numberWithFloat:kDistanceUnknown];
+    }
+    else {
+    
+        CLLocation *locationEvent = [[CLLocation alloc] initWithLatitude:self.gpsLat.floatValue
+                                                               longitude:self.gpsLong.floatValue];
+    
+        float distInMeter = [locationEvent distanceFromLocation:location];
+    
+        self.distance = [NSNumber numberWithFloat:distInMeter];
+    }
+
+    NSLog(@"%@.updateDistanceWithMe Event:%@ Distance=%@ (meters)", self.class, self.title, self.distance);
+}
+
 @end

@@ -2,7 +2,7 @@
 //  EventEntity.h
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 26/02/2014.
+//  Created by Hervé PEROTEAU on 28/03/2014.
 //  Copyright (c) 2014 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSDate * dateEnd;
 @property (nonatomic, retain) NSDate * dateStart;
 @property (nonatomic, retain) NSString * descriptionEvent;
+@property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSString * eventId;
 @property (nonatomic, retain) NSNumber * flagCancelled;
 @property (nonatomic, retain) NSNumber * gpsLat;

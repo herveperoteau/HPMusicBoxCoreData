@@ -35,13 +35,13 @@
 		09A9934017B0B9D8006C4552 /* CriteriaPLEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9933E17B0B9D8006C4552 /* CriteriaPLEntity.m */; };
 		09A9934317B0B9D8006C4552 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9934217B0B9D8006C4552 /* ArtistEntity.m */; };
 		09A9934417B0B9D8006C4552 /* ArtistEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A9934217B0B9D8006C4552 /* ArtistEntity.m */; };
+		09B526D618E58CE8002FA5B1 /* EventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09B526D518E58CE8002FA5B1 /* EventEntity.m */; };
 		09F33F5918BDF7A3001E6AC6 /* EventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F5818BDF7A3001E6AC6 /* EventEntity+Helper.m */; };
 		09F33F6218BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6018BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld */; };
 		09F33F6318BE0279001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6018BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld */; };
 		09F33F6518BE0348001E6AC6 /* AlbumEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09A8AD50181E38FE00577DD5 /* AlbumEntity.m */; };
 		09F33F6618BE0383001E6AC6 /* EventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F5818BDF7A3001E6AC6 /* EventEntity+Helper.m */; };
 		09F33F6718BE038A001E6AC6 /* AlbumEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 090FDAEF1807C2B600635B6C /* AlbumEntity+Helper.m */; };
-		09F33F6A18BE2676001E6AC6 /* EventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6918BE2676001E6AC6 /* EventEntity.m */; };
 		09F33F7018BE283C001E6AC6 /* SearchEventEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F6F18BE283C001E6AC6 /* SearchEventEntity.m */; };
 		09F33F7318BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F7218BE2870001E6AC6 /* SearchEventEntity+Helper.m */; };
 		09F33F7418BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 09F33F7218BE2870001E6AC6 /* SearchEventEntity+Helper.m */; };
@@ -106,11 +106,11 @@
 		09A9933E17B0B9D8006C4552 /* CriteriaPLEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CriteriaPLEntity.m; sourceTree = "<group>"; };
 		09A9934117B0B9D8006C4552 /* ArtistEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArtistEntity.h; sourceTree = "<group>"; };
 		09A9934217B0B9D8006C4552 /* ArtistEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArtistEntity.m; sourceTree = "<group>"; };
+		09B526D418E58CE8002FA5B1 /* EventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEntity.h; sourceTree = "<group>"; };
+		09B526D518E58CE8002FA5B1 /* EventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEntity.m; sourceTree = "<group>"; };
 		09F33F5718BDF7A3001E6AC6 /* EventEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EventEntity+Helper.h"; sourceTree = "<group>"; };
 		09F33F5818BDF7A3001E6AC6 /* EventEntity+Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EventEntity+Helper.m"; sourceTree = "<group>"; };
 		09F33F6118BE021F001E6AC6 /* MusicBoxModel-v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MusicBoxModel-v2.xcdatamodel"; sourceTree = "<group>"; };
-		09F33F6818BE2676001E6AC6 /* EventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventEntity.h; sourceTree = "<group>"; };
-		09F33F6918BE2676001E6AC6 /* EventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventEntity.m; sourceTree = "<group>"; };
 		09F33F6E18BE283C001E6AC6 /* SearchEventEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchEventEntity.h; sourceTree = "<group>"; };
 		09F33F6F18BE283C001E6AC6 /* SearchEventEntity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchEventEntity.m; sourceTree = "<group>"; };
 		09F33F7118BE2870001E6AC6 /* SearchEventEntity+Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SearchEventEntity+Helper.h"; sourceTree = "<group>"; };
@@ -241,8 +241,8 @@
 				09A9934217B0B9D8006C4552 /* ArtistEntity.m */,
 				09A9933D17B0B9D8006C4552 /* CriteriaPLEntity.h */,
 				09A9933E17B0B9D8006C4552 /* CriteriaPLEntity.m */,
-				09F33F6818BE2676001E6AC6 /* EventEntity.h */,
-				09F33F6918BE2676001E6AC6 /* EventEntity.m */,
+				09B526D418E58CE8002FA5B1 /* EventEntity.h */,
+				09B526D518E58CE8002FA5B1 /* EventEntity.m */,
 				09A9933917B0B9D8006C4552 /* PLBaseEntity.h */,
 				09A9933A17B0B9D8006C4552 /* PLBaseEntity.m */,
 				09F33F6E18BE283C001E6AC6 /* SearchEventEntity.h */,
@@ -374,9 +374,9 @@
 				09A9933B17B0B9D8006C4552 /* PLBaseEntity.m in Sources */,
 				098E485617AF72DC001E0FCB /* CriteriaPLEntity+Helper.m in Sources */,
 				098E488B17AF755D001E0FCB /* SmartPlaylistEntity+Helper.m in Sources */,
-				09F33F6A18BE2676001E6AC6 /* EventEntity.m in Sources */,
 				09F33F7318BE2870001E6AC6 /* SearchEventEntity+Helper.m in Sources */,
 				09A9933F17B0B9D8006C4552 /* CriteriaPLEntity.m in Sources */,
+				09B526D618E58CE8002FA5B1 /* EventEntity.m in Sources */,
 				09F33F6218BE021F001E6AC6 /* MusicBoxModel.xcdatamodeld in Sources */,
 				09A9933717B0B9D7006C4552 /* SmartPlaylistEntity.m in Sources */,
 				090FDAF01807C2B600635B6C /* AlbumEntity+Helper.m in Sources */,

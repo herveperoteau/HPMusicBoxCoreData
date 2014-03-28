@@ -2,7 +2,7 @@
 //  EventEntity.m
 //  HPMusicBoxCoreData
 //
-//  Created by Hervé PEROTEAU on 26/02/2014.
+//  Created by Hervé PEROTEAU on 28/03/2014.
 //  Copyright (c) 2014 Hervé PEROTEAU. All rights reserved.
 //
 
@@ -18,6 +18,7 @@
 @dynamic dateEnd;
 @dynamic dateStart;
 @dynamic descriptionEvent;
+@dynamic distance;
 @dynamic eventId;
 @dynamic flagCancelled;
 @dynamic gpsLat;

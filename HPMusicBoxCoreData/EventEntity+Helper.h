@@ -10,6 +10,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 
+#define kDistanceUnknown 99999999L
+
 typedef NS_ENUM(NSInteger, EventStatusOfRead) {
     EventStatusNotRead = 0,
     EventStatusNotReadAfterModification = 1,
@@ -29,5 +31,7 @@ typedef NS_ENUM(NSInteger, EventStatusOfRead) {
 
 -(NSArray *) artistsArray;
 -(NSArray *) tagsArray;
+
+-(void) updateDistanceWithMe:(CLLocation *) location;
 
 @end
