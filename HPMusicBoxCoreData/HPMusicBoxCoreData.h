@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 #import "ArtistEntity.h"
 #import "SmartPlaylistEntity.h"
 #import "CriteriaPLEntity.h"
@@ -21,7 +22,6 @@
 #define ICLOUD_FOLDER_UPDATE @"musicboxdata"
 
 #define NOTIFICATION_MUSICBOX_COREDATA_ICLOUD_REFRESH @"com.peroteau.herve.musicBox.coredata.icloud.refresh"
-
 
 typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
     
@@ -91,6 +91,9 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 
 -(NSArray *) getListSearchEventsForArtist:(BOOL)onlyWithEvents;
 -(NSArray *) getListSearchEventsForLocation;
+
+-(void) updateDistanceEventWithLocation:(CLLocation *)location
+                             Completion:(void (^)(BOOL success, NSError *error))completion;
 
 #pragma mark - FetchRequest for use in other context
 

@@ -14,6 +14,7 @@
 #import "ArtistEntity.h"
 #import "PLBaseEntity.h"
 #import "SmartPlaylistEntity.h"
+#import "EventEntity+Helper.h"
 
 #define AlbumEntityName @"AlbumEntity"
 #define ArtistEntityName @"ArtistEntity"
@@ -757,6 +758,46 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return fetchRequest;
 }
 
+-(void) updateDistanceEventWithLocation:(CLLocation *)location
+                             Completion:(void (^)(BOOL success, NSError *error))completion {
+    
+    NSAssert(_managedObjectContext!=nil, @"_managedObjectContext is nil : call setup before !");
+
+    [queue addOperationWithBlock:^{
+        
+        NSManagedObjectContext *context = _managedObjectContext;
+        
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        
+        NSEntityDescription *entity =[NSEntityDescription entityForName:EventEntityName
+                                                 inManagedObjectContext:context];
+        
+        [fetchRequest setEntity:entity];
+
+        NSError *error;
+        
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+
+        if (!error) {
+        
+            [fetchedObjects enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                EventEntity *event = obj;
+                [event updateDistanceWithMe:location];
+            }];
+        
+            // Save
+            [context save:&error];
+        }
+        
+        // Completion
+        if (completion) {
+            BOOL success = (error == nil);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(success, error);
+            });
+        }
+    }];
+}
 
 #pragma mark - Delete, Save
 
