@@ -109,7 +109,7 @@
         self.distance = [NSNumber numberWithDouble:distInMeter];
     }
 
-    NSLog(@"%@.updateDistanceWithMe Event:%@ Distance=%@ (meters)", self.class, self.title, self.distance);
+//    NSLog(@"%@.updateDistanceWithMe Event:%@ Distance=%@ (meters)", self.class, self.title, self.distance);
 }
 
 @end
