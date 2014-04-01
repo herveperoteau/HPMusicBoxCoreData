@@ -94,6 +94,8 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 #pragma mark - FetchRequest for use with NSFetchedResultsController
 
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date;
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                      flagOnlyNotRead:(BOOL)flagOnlyNotRead;
 
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             ForArtist:(NSString *) artist;
@@ -104,6 +106,12 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             ForSearch:(NSString *) search
                                         MaxKilometers:(NSInteger) maxKilometers;
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForSearch:(NSString *) search
+                                        MaxKilometers:(NSInteger) maxKilometers
+                                      flagOnlyNotRead:(BOOL)flagOnlyNotRead;
+
 
 #pragma mark - Update, Delete, Save
 

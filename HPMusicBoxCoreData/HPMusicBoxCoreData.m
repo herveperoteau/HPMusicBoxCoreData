@@ -524,6 +524,15 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 }
 
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                      flagOnlyNotRead:(BOOL)flagOnlyNotRead {
+    
+    return [self createFetchRequestEventsAfterDate:date
+                                         ForSearch:nil
+                                     MaxKilometers:0
+                                   flagOnlyNotRead:flagOnlyNotRead];
+}
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             ForArtist:(NSString *) artist {
 
     return [self createFetchRequestEventsAfterDate:date
@@ -546,6 +555,18 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     return [self createFetchRequestEventsAfterDate:date
                                          ForSearch:search
                                      MaxKilometers:maxKilometers
+                                         InContext:self.managedObjectContext];
+}
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForSearch:(NSString *) search
+                                        MaxKilometers:(NSInteger) maxKilometers
+                                      flagOnlyNotRead:(BOOL)flagOnlyNotRead {
+    
+    return [self createFetchRequestEventsAfterDate:date
+                                         ForSearch:search
+                                     MaxKilometers:maxKilometers
+                                   flagOnlyNotRead:flagOnlyNotRead
                                          InContext:self.managedObjectContext];
 }
 
@@ -611,9 +632,23 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                                          InContext:context];
 }
 
+
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             ForSearch:(NSString *) search
                                         MaxKilometers:(NSInteger) maxKilometers
+                                            InContext:(NSManagedObjectContext *) context {
+
+    return [self createFetchRequestEventsAfterDate:date
+                                         ForSearch:search
+                                     MaxKilometers:maxKilometers
+                                   flagOnlyNotRead:NO
+                                         InContext:context];
+}
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
+                                            ForSearch:(NSString *) search
+                                        MaxKilometers:(NSInteger) maxKilometers
+                                      flagOnlyNotRead:(BOOL) flagOnlyNotRead
                                             InContext:(NSManagedObjectContext *) context {
     
     __block NSFetchRequest *fetchRequest = nil;
@@ -635,6 +670,11 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
             [predicates addObject:[NSPredicate predicateWithFormat:@"dateStart > %@", date]];
         }
+        
+        if (flagOnlyNotRead) {
+            
+            [predicates addObject:[NSPredicate predicateWithFormat:@"statusRead != %d", EventStatusRead]];
+        }
     
         if (search.length>0) {
         
@@ -651,7 +691,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
         if (maxKilometers > 0) {
         
-            [predicates addObject:[NSPredicate predicateWithFormat:@"(distance!=nil && distance <= %d)", maxKilometers * 1000]];
+            [predicates addObject:[NSPredicate predicateWithFormat:@"(distance!=nil && distance!=0 && distance <= %d)", maxKilometers * 1000]];
         }
     
         if (predicates.count>0) {
