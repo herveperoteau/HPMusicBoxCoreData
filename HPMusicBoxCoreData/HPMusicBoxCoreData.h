@@ -34,7 +34,7 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 
 @interface HPMusicBoxCoreData : NSObject
 
-@property (nonatomic, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 
 /**
  Directory where database is store
@@ -47,9 +47,6 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
  You need call one time, methode setBaseDocumentsURL, before call sharedManager
  */
 +(HPMusicBoxCoreData *) sharedManager;
-
-// Prepare to iCloud
--(void) setup;
 
 #pragma mark - API Twitter Artist
 
@@ -77,7 +74,6 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 
 -(AlbumEntity *) findOrCreateAlbumEntity:(NSString *)keyAlbum;
 
-
 #pragma mark - Events
 
 -(EventEntity *) findEventByEventID:(NSString *)eventId;
@@ -95,29 +91,24 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 -(void) updateDistanceEventWithLocation:(CLLocation *)location
                              Completion:(void (^)(BOOL success, NSError *error))completion;
 
-#pragma mark - FetchRequest for use in other context
+#pragma mark - FetchRequest for use with NSFetchedResultsController
+
+-(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date;
 
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
-                                            InContext:(NSManagedObjectContext *) context;
+                                            ForArtist:(NSString *) artist;
 
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
-                                            ForArtist:(NSString *) artist
-                                            InContext:(NSManagedObjectContext *) context;
-
--(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
-                                            ForSearch:(NSString *) search
-                                            InContext:(NSManagedObjectContext *) context;
+                                            ForSearch:(NSString *) search;
 
 -(NSFetchRequest *) createFetchRequestEventsAfterDate:(NSDate *) date
                                             ForSearch:(NSString *) search
-                                        MaxKilometers:(NSInteger) maxKilometers
-                                            InContext:(NSManagedObjectContext *) context;
+                                        MaxKilometers:(NSInteger) maxKilometers;
 
 #pragma mark - Update, Delete, Save
 
--(void) addSyncOperationWithBlock:(void (^)(void))block;
--(void) addOperationWithBlock:(void (^)(void))block Completion:(void (^)(void))completion;
 -(void) deleteObject:(NSManagedObject *) object;
--(BOOL) save;
+-(void) save;
+
 
 @end

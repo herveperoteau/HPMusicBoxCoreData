@@ -11,10 +11,10 @@
 @interface HPMusicBoxCoreData ()
 
 // Mis ici pour pouvoir etre initialiser aussi directement pendant les TestUnit (sans creation de fichier sqlite)
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
-@property (assign, nonatomic) BOOL simulError;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSManagedObjectContext *writerManagedObjectContext;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 
 @end
