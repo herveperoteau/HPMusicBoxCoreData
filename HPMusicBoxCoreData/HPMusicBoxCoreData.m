@@ -24,6 +24,7 @@
 #define SmartPlaylistEntityName @"SmartPlaylistEntity"
 #define ErrorDomain @"HPMusicBoxCoreData"
 
+#define kStalenessInterval 60.0
 
 //#define FATAL_CORE_DATA_ERROR(__error__) \
 //NSLog(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
@@ -759,6 +760,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
     _managedObjectContext.parentContext = self.writerManagedObjectContext;
     
+    [_managedObjectContext setStalenessInterval:kStalenessInterval];
+    
     return _managedObjectContext;
 }
 
@@ -775,6 +778,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         _writerManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
         _writerManagedObjectContext.persistentStoreCoordinator = coordinator;
+        
+        [_writerManagedObjectContext setStalenessInterval:kStalenessInterval];
     }
     
     return _writerManagedObjectContext;
