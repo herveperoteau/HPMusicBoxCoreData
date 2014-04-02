@@ -26,8 +26,19 @@
 
 #define kStalenessInterval 60.0
 
+#import <CocoaLumberjack/DDLog.h>
+#import <CocoaLumberjack/DDASLLogger.h>
+#import <CocoaLumberjack/DDTTYLogger.h>
+#import <CocoaLumberjack/DDFileLogger.h>
+
+#ifdef DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_WARN;
+#endif
+
 //#define FATAL_CORE_DATA_ERROR(__error__) \
-//NSLog(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
+//DDLogInfo(@"*** Fatal Error in %s:%d\n%@\n%@", __FILE__, __LINE__, error, [error userInfo]);\
 //if ([(id) [[UIApplication sharedApplication] delegate] respondsToSelector:@selector(fatalCoreDataError:)]) {\
 //[(id) [[UIApplication sharedApplication] delegate] performSelector:@selector(fatalCoreDataError:) withObject:error];\
 //};
@@ -582,12 +593,12 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                                             ForArtist:(NSString *) artist
                                             InContext:(NSManagedObjectContext *) context {
 
-    NSLog(@"%@.createFetchRequestEventsAfterDate:%@ ForArtist:%@ ...", self.class, date, artist);
+    DDLogInfo(@"%@.createFetchRequestEventsAfterDate:%@ ForArtist:%@ ...", self.class, date, artist);
     
     __block NSFetchRequest *fetchRequest = nil;
 
     [context performBlockAndWait:^{
-
+        
         fetchRequest = [[NSFetchRequest alloc] init];
 
         NSEntityDescription *entity =[NSEntityDescription entityForName:EventEntityName
@@ -607,7 +618,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
         if (predicates.count>0) {
             NSPredicate *predicatesCompound = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
-            NSLog(@"Predicates=%@", predicatesCompound);
+            DDLogInfo(@"Predicates=%@", predicatesCompound);
             [fetchRequest setPredicate:predicatesCompound];
         }
     
@@ -655,7 +666,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     [context performBlockAndWait:^{
 
-        NSLog(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ MaxKilometers:%d ...", self.class, date, search, maxKilometers);
+        DDLogInfo(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ MaxKilometers:%d ...", self.class, date, search, maxKilometers);
     
         fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -697,7 +708,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         if (predicates.count>0) {
         
             NSPredicate *predicatesCompound = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
-            NSLog(@"Predicates=%@", predicatesCompound);
+            DDLogInfo(@"Predicates=%@", predicatesCompound);
             [fetchRequest setPredicate:predicatesCompound];
         }
     
@@ -756,21 +767,36 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 -(void) save {
     
-    [self.managedObjectContext performBlockAndWait:^{
+    DDLogInfo(@"%@.save ...", self.class);
+    
+    [self.managedObjectContext performBlock:^{
+        
+        DDLogInfo(@"%@.save managedObjectContext save ...", self.class);
 
         NSError *error = nil;
+        
         if (![self.managedObjectContext save:&error]) {
-            NSLog(@"%@.Unresolved error %@, %@", self.class, error, [error userInfo]);
+       
+            DDLogError(@"%@.Unresolved error %@, %@", self.class, error, [error userInfo]);
+            [DDLog flushLog];
             abort();
         }
         
+        DDLogInfo(@"%@.save writerManagedObjectContext ...", self.class);
+
         [self.writerManagedObjectContext performBlock:^{
             
+            DDLogInfo(@"%@.save writerManagedObjectContext performBlock save ...", self.class);
+            
             NSError *error = nil;
+            
             if (![self.writerManagedObjectContext save:&error]) {
-                NSLog(@"%@.Unresolved error %@, %@", self.class, error, [error userInfo]);
+                DDLogError(@"%@.Unresolved error %@, %@", self.class, error, [error userInfo]);
+                [DDLog flushLog];
                 abort();
             }
+            
+            DDLogInfo(@"%@.save writerManagedObjectContext performBlock save ended.", self.class);
         }];
     }];
     
@@ -778,6 +804,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 -(void) deleteObject:(NSManagedObject *) object {
     
+    DDLogInfo(@"%@.deleteObject ...", self.class);
+
     [self.managedObjectContext performBlockAndWait:^{
         
         NSManagedObjectContext *context = _managedObjectContext;
@@ -845,7 +873,8 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                                                          options:nil
                                                            error:&error]) {
         
-        NSLog(@"%@.Unresolved error %@, %@", self.class, error, [error userInfo]);
+        DDLogError(@"%@.Unresolved error %@, %@", self.class, error, [error userInfo]);
+        [DDLog flushLog];
         abort();
     }
     
@@ -863,7 +892,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     // Marche pas sur le test unitaire de la lib
     //NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"ModelTest" withExtension:@"momd"];
-    //NSLog(@"modelURL=%@", modelURL);
+    //DDLogInfo(@"modelURL=%@", modelURL);
     //_managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     
     _managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];
