@@ -131,8 +131,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         result = entity;
     }];
-
-    [self save];
     
     return result;
 }
@@ -261,8 +259,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         result = entity;
     }];
     
-    [self save];
-    
     return result;
 }
 
@@ -279,8 +275,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
         result = entity;
     }];
-
-    [self save];
     
     return result;
 }
@@ -351,8 +345,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         }
     }];
 
-    [self save];
-    
     return result;
 }
 
@@ -465,8 +457,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         result = entity;
     }];
 
-    [self save];
-    
     return result;
 }
 
@@ -748,9 +738,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
                 EventEntity *event = obj;
                 [event updateDistanceWithMe:location];
             }];
-        
-            // Save
-            [self save];
         }
         
         // Completion
@@ -802,6 +789,45 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
 }
 
+-(void) saveSync {
+    
+    DDLogInfo(@"%@.saveSync ...", self.class);
+    
+    [self.managedObjectContext performBlockAndWait:^{
+        
+        DDLogInfo(@"%@.saveSync managedObjectContext save ...", self.class);
+        
+        NSError *error = nil;
+        
+        if (![self.managedObjectContext save:&error]) {
+            
+            DDLogError(@"%@.saveSync Unresolved error %@, %@", self.class, error, [error userInfo]);
+            [DDLog flushLog];
+            abort();
+        }
+        
+        DDLogInfo(@"%@.saveSync writerManagedObjectContext ...", self.class);
+        
+        [self.writerManagedObjectContext performBlockAndWait:^{
+            
+            DDLogInfo(@"%@.saveSync writerManagedObjectContext performBlock save ...", self.class);
+            
+            NSError *error = nil;
+            
+            if (![self.writerManagedObjectContext save:&error]) {
+                DDLogError(@"%@.saveSync Unresolved error %@, %@", self.class, error, [error userInfo]);
+                [DDLog flushLog];
+                abort();
+            }
+            
+            DDLogInfo(@"%@.saveSync writerManagedObjectContext performBlock save ended.", self.class);
+        }];
+        
+        DDLogInfo(@"%@.saveSync ended.", self.class);
+    }];
+}
+
+
 -(void) deleteObject:(NSManagedObject *) object {
     
     DDLogInfo(@"%@.deleteObject ...", self.class);
@@ -810,7 +836,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         NSManagedObjectContext *context = _managedObjectContext;
         [context deleteObject:object];
-        [self save];
     }];
 }
 

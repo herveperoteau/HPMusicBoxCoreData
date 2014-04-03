@@ -117,6 +117,7 @@ typedef NS_ENUM(NSUInteger, HPTypeSearchEvent) {
 
 -(void) deleteObject:(NSManagedObject *) object;
 -(void) save;
+-(void) saveSync;
 
 
 @end
