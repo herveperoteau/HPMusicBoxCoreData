@@ -656,7 +656,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     
     [context performBlockAndWait:^{
 
-        DDLogInfo(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ MaxKilometers:%d ...", self.class, date, search, maxKilometers);
+        DDLogInfo(@"%@.createFetchRequestEventsAfterDate:%@ ForSearch:%@ MaxKilometers:%ld ...", self.class, date, search, (long)maxKilometers);
     
         fetchRequest = [[NSFetchRequest alloc] init];
     
