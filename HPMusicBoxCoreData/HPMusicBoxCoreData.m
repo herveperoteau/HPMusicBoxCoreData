@@ -16,6 +16,8 @@
 #import "SmartPlaylistEntity.h"
 #import "EventEntity+Helper.h"
 
+#import <NSDate+HPUtils.h>
+
 #define AlbumEntityName @"AlbumEntity"
 #define ArtistEntityName @"ArtistEntity"
 #define EventEntityName @"EventEntity"
@@ -89,13 +91,42 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
 
 -(id) initWithURLDocuments:(NSURL *)docURL {
     
+    DDLogInfo(@"%@.initWithURLDocuments:%@ ...", self.class, docURL);
+    
     if ( (self = [self init]) ) {
         
         self.documentsURL = docURL;
+
+        DDLogInfo(@"%@.initWithURLDocuments:%@ registerNotification ...", self.class, docURL);
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector (handle_ApplicationEnterForeground:)
+                                                     name:UIApplicationWillEnterForegroundNotification
+                                                   object:nil];
+
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector (handle_ApplicationEnterBackground:)
+//                                                     name:UIApplicationDidEnterBackgroundNotification
+//                                                   object:nil];
+        
+        [self purge];
     }
     
     return self;
 }
+
+#pragma mark - Notification Applications State
+
+-(void) handle_ApplicationEnterForeground:(NSNotification *)notification {
+    
+    NSLog(@"%@.handle_ApplicationEnterForeground ...", self.class);
+    [self purge];
+}
+
+//-(void) handle_ApplicationEnterBackground:(NSNotification *)notification {
+//    
+//    NSLog(@"%@.handle_ApplicationEnterBackground ...", self.class);
+//}
 
 #pragma mark - Facade CoreData
 
@@ -827,7 +858,6 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
     }];
 }
 
-
 -(void) deleteObject:(NSManagedObject *) object {
     
     DDLogInfo(@"%@.deleteObject ...", self.class);
@@ -836,6 +866,53 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         
         NSManagedObjectContext *context = _managedObjectContext;
         [context deleteObject:object];
+    }];
+}
+
+#pragma mark - Purges
+
+-(void)purge {
+    
+    DDLogInfo(@"%@.purge ...", self.class);
+    
+    [self.managedObjectContext performBlock:^{
+
+        DDLogInfo(@"%@.purge start ...", self.class);
+
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+            
+        NSEntityDescription *entity =[NSEntityDescription entityForName:EventEntityName
+                                                 inManagedObjectContext:self.managedObjectContext];
+            
+        [fetchRequest setEntity:entity];
+            
+        NSDate *datePurgeable = [[NSDate date] dateAtZeroHourMinusXDays:3];
+        
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"dateStart < %@ AND (dateEnd==nil OR dateEnd < %@)",
+                                    datePurgeable, datePurgeable]];
+        
+        NSError *error;
+        
+        NSArray *oldEvents = [self.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        
+        if (error) {
+            
+            DDLogError(@"%@.purge : error fetch %@", self.class, [error localizedDescription]);
+        }
+        else {
+            
+            DDLogInfo(@"%@.purge count=%d ...", self.class, oldEvents.count);
+
+            [oldEvents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [self.managedObjectContext deleteObject:obj];
+            }];
+        }
+        
+        if (oldEvents.count>0) {
+            [self save];
+        }
+        
+        DDLogInfo(@"%@.purge ended (count=%d)", self.class, oldEvents.count);
     }];
 }
 
