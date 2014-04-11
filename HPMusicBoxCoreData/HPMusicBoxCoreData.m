@@ -634,7 +634,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         }
 
         if (artist.length>0) {
-            
+
             [predicates addObject:[NSPredicate predicateWithFormat:@"artists CONTAINS[cd] %@", artist]];
         }
 
