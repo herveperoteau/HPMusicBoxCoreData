@@ -902,7 +902,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
         }
         else {
             
-            DDLogInfo(@"%@.purge count=%d ...", self.class, oldEvents.count);
+            DDLogInfo(@"%@.purge count=%lu ...", self.class, (unsigned long)oldEvents.count);
 
             [oldEvents enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 [self.managedObjectContext deleteObject:obj];
@@ -913,7 +913,7 @@ static HPMusicBoxCoreData *sharedMyManager = nil;
             [self save];
         }
         
-        DDLogInfo(@"%@.purge ended (count=%d)", self.class, oldEvents.count);
+        DDLogInfo(@"%@.purge ended (count=%lu)", self.class, (unsigned long)oldEvents.count);
     }];
 }
 
